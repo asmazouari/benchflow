@@ -1,0 +1,167 @@
+{
+  "collaborateurs": [
+    {
+      "id": 2,
+      "nom": "Sara Ben Ali",
+      "email": "sara.benali@benchflow.tech",
+      "metier": "Dev",
+      "date_fin_staffing": "2026-10-25",
+      "role": "collaborateur",
+      "client_actuel": "Banque Populaire (Refonte API)",
+      "initiative_active_id": 105
+    },
+    {
+      "id": 3,
+      "nom": "Ahmed Kacem",
+      "email": "ahmed.kacem@benchflow.tech",
+      "metier": "QA",
+      "date_fin_staffing": "2026-10-15",
+      "role": "collaborateur",
+      "client_actuel": "Fin de mission Retail",
+      "initiative_active_id": null
+    },
+    {
+      "id": 4,
+      "nom": "Julien Martin",
+      "email": "julien.martin@benchflow.tech",
+      "metier": "DevOps",
+      "date_fin_staffing": "2026-10-22",
+      "role": "collaborateur",
+      "client_actuel": "Assurance Directe (Cloud AWS)",
+      "initiative_active_id": null
+    },
+    {
+      "id": 5,
+      "nom": "Claire Dubois",
+      "email": "claire.dubois@benchflow.tech",
+      "metier": "PO",
+      "date_fin_staffing": "2026-11-30",
+      "role": "collaborateur",
+      "client_actuel": "SaaS E-commerce",
+      "initiative_active_id": null
+    },
+    {
+      "id": 6,
+      "nom": "Mehdi Zayani",
+      "email": "mehdi.zayani@benchflow.tech",
+      "metier": "Dev",
+      "date_fin_staffing": "2026-10-12",
+      "role": "collaborateur",
+      "client_actuel": "Disponible (Inter-projet actif)",
+      "initiative_active_id": null
+    },
+    {
+      "id": 7,
+      "nom": "Émilie Roux",
+      "email": "emilie.roux@benchflow.tech",
+      "metier": "QA",
+      "date_fin_staffing": "2026-12-15",
+      "role": "collaborateur",
+      "client_actuel": "Télécom Santé",
+      "initiative_active_id": null
+    },
+    {
+      "id": 8,
+      "nom": "test",
+      "email": "asma.zo@piximind.com",
+      "metier": "Dev",
+      "date_fin_staffing": "2026-10-29",
+      "client_actuel": "testzz",
+      "role": "collaborateur",
+      "initiative_active_id": null
+    }
+  ],
+  "initiatives": [
+    {
+      "id": 101,
+      "titre": "Banc de tests automatisés E2E avec Playwright",
+      "description": "Concevoir un framework de test robuste et réutilisable pour tous les projets web internes de la société.",
+      "metier": "QA",
+      "duree": "Sprint",
+      "statut": "EN_COURS",
+      "origine": "manager",
+      "auteur_nom": "Thomas Laurent (Manager)",
+      "assigne_nom": "Thomas Laurent",
+      "date_creation": "2026-10-10",
+      "livrable_url": null
+    },
+    {
+      "id": 102,
+      "titre": "Starter Kit Next.js 16 + Tailwind v4 + TypeScript",
+      "description": "Créer un template d'onboarding rapide pour accélérer le démarrage des futurs projets clients.",
+      "metier": "Dev",
+      "duree": "Flash",
+      "statut": "EN_COURS",
+      "origine": "manager",
+      "auteur_nom": "Thomas Laurent (Manager)",
+      "assigne_nom": "Thomas Laurent",
+      "date_creation": "2026-10-11",
+      "livrable_url": null
+    },
+    {
+      "id": 103,
+      "titre": "Pipeline CI/CD Terraform & GitHub Actions pour AWS",
+      "description": "Automatiser le provisionnement d'environnements de test éphémères pour les consultants.",
+      "metier": "DevOps",
+      "duree": "Sprint",
+      "statut": "DISPONIBLE",
+      "origine": "manager",
+      "auteur_nom": "Thomas Laurent (Manager)",
+      "assigne_nom": null,
+      "date_creation": "2026-10-12",
+      "livrable_url": null
+    },
+    {
+      "id": 104,
+      "titre": "Benchmark & Guide d'outils d'IA générative pour Product Owners",
+      "description": "Synthétiser les meilleurs prompts et outils pour rédiger des User Stories 3x plus vite.",
+      "metier": "PO",
+      "duree": "Flash",
+      "statut": "EN_COURS",
+      "origine": "manager",
+      "auteur_nom": "Thomas Laurent (Manager)",
+      "assigne_nom": "Thomas Laurent",
+      "date_creation": "2026-10-13",
+      "livrable_url": null
+    },
+    {
+      "id": 105,
+      "titre": "Refonte de l'architecture micro-services en FastAPI",
+      "description": "POC de montée en charge et documentation technique pour nos clients grands comptes.",
+      "metier": "Dev",
+      "duree": "Fond",
+      "statut": "EN_COURS",
+      "origine": "manager",
+      "auteur_nom": "Thomas Laurent (Manager)",
+      "assigne_nom": "Sara Ben Ali",
+      "date_creation": "2026-10-08",
+      "livrable_url": null
+    },
+    {
+      "id": 106,
+      "titre": "Passage de certification AWS Certified Developer",
+      "description": "Préparation intensive et passage de l'examen officiel pour renforcer l'expertise Cloud de l'équipe.",
+      "metier": "Dev",
+      "duree": "Sprint",
+      "statut": "EN_COURS",
+      "origine": "collaborateur",
+      "auteur_nom": "Mehdi Zayani",
+      "assigne_nom": "Mehdi Zayani",
+      "date_creation": "2026-10-14",
+      "livrable_url": null
+    },
+    {
+      "id": 107,
+      "titre": "formation ai",
+      "description": "developement",
+      "metier": "Dev",
+      "duree": "Sprint",
+      "statut": "EN_COURS",
+      "origine": "manager",
+      "auteur_nom": "Thomas Laurent (Manager)",
+      "assigne_nom": "Thomas Laurent",
+      "date_creation": "2026-10-16",
+      "livrable_url": null
+    }
+  ]
+}
