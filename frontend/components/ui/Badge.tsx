@@ -37,20 +37,20 @@ export function Badge({
 
   if (variant === 'alerte' && alerte) {
     const alerteColors: Record<StatutAlerte, string> = {
-      stable: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-      urgent: 'bg-amber-50 text-amber-700 border-amber-300 animate-pulse',
-      intermission: 'bg-rose-50 text-rose-700 border-rose-200 font-semibold',
+      stable: 'badge-pastel-emerald font-semibold',
+      urgent: 'badge-pastel-amber font-semibold',
+      intermission: 'badge-pastel-rose font-bold',
     };
     colorStyles = alerteColors[alerte] || colorStyles;
   }
 
   if (variant === 'statut' && statut) {
     const statutColors: Record<StatutInitiative, string> = {
-      DISPONIBLE: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-      A_VALIDER: 'bg-amber-50 text-amber-700 border-amber-200',
-      EN_COURS: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-      TERMINE: 'bg-slate-100 text-slate-600 border-slate-200',
-      REFUSE: 'bg-rose-50 text-rose-700 border-rose-200',
+      DISPONIBLE: 'badge-pastel-emerald font-semibold',
+      A_VALIDER: 'badge-pastel-amber font-semibold',
+      EN_COURS: 'badge-pastel-indigo font-semibold',
+      TERMINE: 'bg-slate-100 text-slate-600 border border-slate-200 font-medium',
+      REFUSE: 'badge-pastel-rose font-semibold',
     };
     colorStyles = statutColors[statut] || colorStyles;
   }
