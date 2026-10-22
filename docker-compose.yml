@@ -1,0 +1,54 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.5
+    container_name: benchflow-keycloak
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./infra/keycloak/realm-benchflow.json:/opt/keycloak/data/import/realm-benchflow.json:ro
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: benchflow-postgres
+    environment:
+      POSTGRES_DB: benchflow
+      POSTGRES_USER: benchflow_user
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5435:5432"
+    volumes:
+      - benchflow_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  adminer:
+    image: adminer:latest
+    container_name: benchflow-adminer
+    ports:
+      - "8088:8080"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: benchflow-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@benchflow.tech
+      PGADMIN_DEFAULT_PASSWORD: password123
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    volumes:
+      - ./infra/pgadmin/servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  benchflow_pgdata:

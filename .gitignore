@@ -1,0 +1,25 @@
+# Python
+backend/venv/
+backend/.venv/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+*.db
+backend/data/*.db
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Variables d'environnement secrètes
+*.env
+*.env.local
+!*.env.example
+
+# OS & Editeurs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
