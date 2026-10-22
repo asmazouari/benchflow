@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartTask AI — Gestion de Tâches &amp; Déblocage Cognitif</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Plus Jakarta Sans & Inter & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary": "#ffffff",
+            "on-primary-container": "#fffbff",
+            "on-tertiary-fixed": "#002113",
+            "tertiary-fixed": "#6ffbbe",
+            "on-error": "#ffffff",
+            "tertiary-fixed-dim": "#4edea3",
+            "outline": "#767586",
+            "secondary-container": "#8455ef",
+            "on-secondary-fixed-variant": "#5516be",
+            "on-primary-fixed": "#07006c",
+            "tertiary": "#006c49",
+            "surface": "#f8f9ff",
+            "secondary-fixed-dim": "#d0bcff",
+            "surface-variant": "#d3e4fe",
+            "surface-dim": "#cbdbf5",
+            "surface-container-low": "#eff4ff",
+            "secondary-fixed": "#e9ddff",
+            "inverse-primary": "#c0c1ff",
+            "surface-container": "#e5eeff",
+            "primary-fixed": "#e1e0ff",
+            "outline-variant": "#c7c4d7",
+            "on-tertiary-container": "#000703",
+            "secondary": "#6b38d4",
+            "on-tertiary": "#ffffff",
+            "primary-fixed-dim": "#c0c1ff",
+            "surface-container-highest": "#d3e4fe",
+            "surface-tint": "#494bd6",
+            "inverse-surface": "#213145",
+            "on-secondary-container": "#fffbff",
+            "on-surface-variant": "#464554",
+            "tertiary-container": "#00885d",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "on-primary": "#ffffff",
+            "on-background": "#0b1c30",
+            "background": "#f8f9ff",
+            "on-secondary-fixed": "#23005c",
+            "primary": "#4648d4",
+            "surface-container-high": "#dce9ff",
+            "inverse-on-surface": "#eaf1ff",
+            "surface-bright": "#f8f9ff",
+            "primary-container": "#6063ee",
+            "on-surface": "#0b1c30",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-primary-fixed-variant": "#2f2ebe",
+            "on-error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xl": "2.25rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "space-md": "0.875rem",
+            "margin": "2rem",
+            "gutter-mobile": "1rem",
+            "gutter": "1.5rem",
+            "space-lg": "1.5rem",
+            "margin-mobile": "1rem"
+          },
+          "fontFamily": {
+            "body-sm": ["Inter"],
+            "headline-display-mobile": ["Plus Jakarta Sans"],
+            "body-md": ["Inter"],
+            "headline-display": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "code-mono": ["JetBrains Mono"],
+            "body-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "label-sm": ["Inter"]
+          },
+          "fontSize": {
+            "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-display-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "headline-display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "code-mono": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }],
+            "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "500" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #c7c4d7;
+      border-radius: 4px;
+    }
+    .ai-glow-card {
+      box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.18), 0 8px 24px -4px rgba(139, 92, 246, 0.16);
+    }
+    .modal-backdrop {
+      background: rgba(11, 28, 48, 0.45);
+      backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
+<!-- TOP APP BAR (Shared Component: TopNavBar) -->
+<header class="bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant dark:border-outline shadow-sm dark:shadow-none fixed top-0 left-0 right-0 z-30 h-16">
+<div class="flex justify-between items-center w-full px-6 h-16 max-w-full">
+<!-- Brand & Search cluster -->
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-on-primary shadow-sm shadow-primary/30">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<span class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary tracking-tight">SmartTask AI</span>
+</div>
+<!-- Quick Search Pill (on_left search_bar requirement) -->
+<div class="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container-low border border-outline-variant/60 text-on-surface-variant font-label-md text-label-md w-64 hover:border-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-base">search</span>
+<span class="flex-1 truncate">Recherche rapide...</span>
+<kbd class="px-1.5 py-0.5 rounded bg-surface-container-lowest border border-outline-variant text-[10px] font-code-mono text-outline">⌘K</kbd>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center gap-8 h-full pt-1">
+<!-- Active: Tasks -->
+<a class="text-primary dark:text-inverse-primary border-b-2 border-primary dark:border-inverse-primary font-semibold pb-1 flex items-center gap-1.5 text-label-md font-label-md h-full" href="#tasks">
+<span>Tasks</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary inline-block"></span>
+</a>
+<a class="text-on-surface-variant dark:text-inverse-on-surface hover:text-on-surface transition-colors pb-1 text-label-md font-label-md h-full flex items-center" href="#backlog">
+          Backlog
+        </a>
+<a class="text-on-surface-variant dark:text-inverse-on-surface hover:text-on-surface transition-colors pb-1 text-label-md font-label-md h-full flex items-center" href="#velocity">
+          Velocity
+        </a>
+<a class="text-on-surface-variant dark:text-inverse-on-surface hover:text-on-surface transition-colors pb-1 text-label-md font-label-md h-full flex items-center gap-1" href="#ai-insights">
+<span class="material-symbols-outlined text-sm text-secondary" style="font-variation-settings: 'FILL' 1;">arrow_back_ios_new</span>
+<span>AI Insights</span>
+</a>
+</nav>
+<!-- Trailing Controls -->
+<div class="flex items-center gap-3">
+<!-- Team Velocity Progress Mini-Pill -->
+<div class="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-low border border-outline-variant/50">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Progression d'équipe:</span>
+<span class="text-label-sm font-label-sm font-semibold text-primary">75% completed</span>
+<div class="w-16 h-2 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-secondary rounded-full" style="width: 75%;"></div>
+</div>
+</div>
+<!-- Trailing Secondary Action (⌘K Quick Add) -->
+<button class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined text-base">bolt</span>
+<span>⌘K Quick Add</span>
+</button>
+<!-- Trailing Primary Action (+ New Task) -->
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-sm shadow-primary/20 hover:bg-primary-container transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-base">add</span>
+<span class="font-semibold">+ New Task</span>
+</button>
+<!-- Trailing Icon Actions -->
+<button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors relative" title="Notifications">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary"></span>
+</button>
+<button class="p-2 rounded-lg text-secondary hover:bg-secondary-fixed/30 transition-colors" title="Suggestions IA">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</button>
+<!-- User Profile Avatar with Status -->
+<div class="relative ml-1 cursor-pointer">
+<img alt="User avatar profile photo with status indicator" class="w-8 h-8 rounded-full ring-2 ring-surface-container border border-outline-variant/40 object-cover" data-alt="Professional user portrait headshot with warm studio lighting, modern tech worker wearing minimalist dark charcoal pullover, crisp focus against clean bright blurred office background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJx4P6VhxFnrdEL6H9EjjqYAHI1yhsl4sgbWkLIiV-BHZLoLOzL3FpZ7sPawbUgK8f5NwFEWR7ZSt50agqfmFYyij7LpNHoFg1kuXFzk4Xqk3B-NSzAGeDEUvVwKksEXfEW8k-l6lJJB_2Oy2sBQz4yCzs4Uo6Jv6qJWO6W8cbTAjvF1oKVe72SIo21rf7Vrevmk2q9JDEGAEMjzD-Vn4vBhi4pCkvlRUDKdmwsFODjq8ro9zKaaukdWpsdbt7HZwr16LexIChKF8"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-tertiary ring-2 ring-surface-container-lowest"></span>
+</div>
+</div>
+</div>
+</header>
+<!-- BODY CONTAINER (SIDEBAR + MAIN CONTENT CANVAS) -->
+<div class="flex pt-16 min-h-[calc(100vh-4rem)] w-full">
+<!-- LEFT SIDEBAR (Shared Component: SideNavBar) -->
+<aside class="fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-surface-container-low dark:bg-surface-container-lowest border-r border-outline-variant dark:border-outline flat no shadows z-20 flex flex-col justify-between p-4">
+<!-- Top Section: Workspace & Primary Tabs -->
+<div class="flex flex-col gap-5">
+<!-- Header / Workspace Selector -->
+<div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/50 flex items-center justify-between shadow-xs">
+<div class="flex items-center gap-2.5 truncate">
+<div class="w-7 h-7 rounded-lg bg-primary-fixed flex items-center justify-center text-primary font-bold text-sm shrink-0">
+<span class="material-symbols-outlined text-base">layers</span>
+</div>
+<div class="truncate">
+<div class="text-headline-sm font-headline-sm font-bold text-on-surface dark:text-inverse-on-surface truncate leading-tight">Acme Workspace</div>
+<div class="text-code-mono font-code-mono text-[10px] text-secondary font-semibold">Pro AI Tier</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-base text-outline">unfold_more</span>
+</div>
+<!-- Navigation Tabs (5 Tabs according to JSON) -->
+<div class="flex flex-col gap-1">
+<div class="text-[11px] font-label-sm uppercase tracking-wider text-outline px-3 mb-1">Espaces de travail</div>
+<!-- Tab 1: Today's Focus (Active Match for this screen) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface-container-highest dark:bg-inverse-surface text-primary dark:text-inverse-primary font-semibold text-label-md font-label-md transition-colors active:scale-[0.99]" href="#focus">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="flex-1">Today's Focus</span>
+<span class="px-1.5 py-0.2 rounded-full bg-primary text-on-primary text-[10px] font-bold">5</span>
+</a>
+<!-- Tab 2: All Tasks -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-inverse-on-surface hover:text-on-surface hover:bg-surface-container font-medium text-label-md font-label-md transition-colors active:scale-[0.99]" href="#all">
+<span class="material-symbols-outlined text-xl">list_alt</span>
+<span class="flex-1">All Tasks</span>
+<span class="text-xs text-outline font-code-mono">18</span>
+</a>
+<!-- Tab 3: AI Coach & Sprints -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-inverse-on-surface hover:text-on-surface hover:bg-surface-container font-medium text-label-md font-label-md transition-colors active:scale-[0.99]" href="#coach">
+<span class="material-symbols-outlined text-xl text-secondary">smart_toy</span>
+<span class="flex-1">AI Coach &amp; Sprints</span>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+</a>
+<!-- Tab 4: Team Velocity -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-inverse-on-surface hover:text-on-surface hover:bg-surface-container font-medium text-label-md font-label-md transition-colors active:scale-[0.99]" href="#velocity-side">
+<span class="material-symbols-outlined text-xl">trending_up</span>
+<span class="flex-1">Team Velocity</span>
+</a>
+<!-- Tab 5: Projects -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-inverse-on-surface hover:text-on-surface hover:bg-surface-container font-medium text-label-md font-label-md transition-colors active:scale-[0.99]" href="#projects">
+<span class="material-symbols-outlined text-xl">folder_open</span>
+<span class="flex-1">Projects</span>
+</a>
+</div>
+<!-- AI Quick Trigger Banner (Anti-blocage / Je bloque CTA) -->
+<div class="mt-2 p-3.5 rounded-xl bg-gradient-to-br from-secondary-fixed/40 via-surface-container-lowest to-primary-fixed/30 border border-secondary/20 shadow-xs flex flex-col gap-2.5">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-lg animate-pulse" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span class="text-label-sm font-label-sm font-bold tracking-tight">Mode Anti-Blocage</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant text-[12px] leading-relaxed">
+            Paralysé par une sous-tâche ? Découpons-la en micro-étapes de 120 secondes.
+          </p>
+<button class="w-full mt-1 py-2 px-3 rounded-lg bg-gradient-to-r from-primary to-secondary text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center gap-2 shadow-sm shadow-primary/20 hover:opacity-95 transition-all active:scale-[0.98]" onclick="document.getElementById('anti-procrastination-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span>Je bloque (Aide IA)</span>
+</button>
+</div>
+</div>
+<!-- Bottom Section / Footer Tabs (Settings & Documentation) -->
+<div class="flex flex-col gap-1 pt-3 border-t border-outline-variant/50">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-medium text-label-md font-label-md transition-colors" href="#settings">
+<span class="material-symbols-outlined text-lg">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-medium text-label-md font-label-md transition-colors" href="#docs">
+<span class="material-symbols-outlined text-lg">help_outline</span>
+<span>Documentation</span>
+</a>
+</div>
+</aside>
+<!-- MAIN CONTENT CANVAS -->
+<main class="ml-64 flex-1 p-8 max-w-[1440px] mx-auto w-full custom-scroll">
+<!-- GREETING & CONTEXT HEADER -->
+<section class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-outline-variant/40">
+<div>
+<div class="flex items-center gap-3">
+<h1 class="text-headline-display font-headline-display text-on-surface tracking-tight">Bonjour Thomas 👋 — Focus du jour</h1>
+<span class="px-2.5 py-1 rounded-full bg-secondary-fixed text-secondary font-label-sm text-[11px] font-semibold border border-secondary/20 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+              Sprint Actif #14
+            </span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant mt-1 max-w-2xl">
+            Optimisez vos priorités stratégiques grâce à l'orchestration cognitive assistée par IA.
+          </p>
+</div>
+<!-- View Switcher Controls -->
+<div class="flex items-center p-1 rounded-xl bg-surface-container-low border border-outline-variant/60 shadow-xs self-start md:self-auto">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-semibold text-label-md font-label-md shadow-xs">
+<span class="material-symbols-outlined text-base">table_rows</span>
+<span>Vue Tableau</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-medium text-label-md font-label-md transition-colors">
+<span class="material-symbols-outlined text-base">view_kanban</span>
+<span>Kanban</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-medium text-label-md font-label-md transition-colors">
+<span class="material-symbols-outlined text-base">calendar_today</span>
+<span>Calendrier</span>
+</button>
+</div>
+</section>
+<!-- QUICK ADD BAR (Docked Elevated Interactive Card) -->
+<section class="my-6">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-3 shadow-sm hover:shadow-md transition-shadow">
+<form class="flex flex-col md:flex-row items-center gap-3" onsubmit="event.preventDefault();">
+<!-- Text Input -->
+<div class="flex-1 flex items-center gap-3 px-3 py-2 rounded-xl bg-surface-container-low/60 border border-transparent focus-within:border-primary focus-within:bg-surface-container-lowest transition-all w-full">
+<span class="material-symbols-outlined text-primary text-xl">add_task</span>
+<input class="w-full bg-transparent border-none p-0 text-on-surface placeholder:text-outline text-body-md font-body-md focus:ring-0" placeholder="Add a task or describe an action..." type="text"/>
+<span class="px-2 py-0.5 rounded text-[11px] font-code-mono text-secondary bg-secondary-fixed/50 border border-secondary/20 hidden sm:inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">auto_fix_high</span> Auto-tags
+              </span>
+</div>
+<!-- Priority Selector Dropdown -->
+<div class="flex items-center gap-2 w-full md:w-auto">
+<div class="relative shrink-0">
+<select class="appearance-none bg-surface-container-low border border-outline-variant/60 rounded-xl px-3.5 py-2.5 pr-8 text-on-surface text-label-md font-label-md focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer">
+<option value="high">🔥 Haute / Urgente</option>
+<option selected="" value="med">⚡ Moyenne</option>
+<option value="low">🌱 Basse</option>
+</select>
+<span class="material-symbols-outlined text-outline text-base absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+</div>
+<!-- Due Date Picker -->
+<div class="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant/60 text-on-surface text-label-md font-label-md hover:bg-surface-container transition-colors cursor-pointer shrink-0">
+<span class="material-symbols-outlined text-outline text-base">event</span>
+<span>Aujourd'hui, 18:00</span>
+</div>
+<!-- Primary Add Task Button -->
+<button class="w-full md:w-auto px-5 py-2.5 rounded-xl bg-primary text-on-primary font-semibold text-label-md font-label-md flex items-center justify-center gap-2 shadow-sm shadow-primary/25 hover:bg-primary-container transition-all active:scale-[0.98] shrink-0" type="submit">
+<span class="material-symbols-outlined text-lg">add</span>
+<span>+ Ajouter</span>
+</button>
+</div>
+</form>
+</div>
+</section>
+<!-- FILTER TABS & SEARCH ROW -->
+<section class="flex flex-wrap items-center justify-between gap-4 mb-5">
+<!-- Horizontal Filter Strip -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1">
+<button class="px-3.5 py-1.5 rounded-lg bg-surface-container-highest text-primary font-semibold text-label-md font-label-md shadow-xs">
+            All Tasks <span class="ml-1 opacity-70">5</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-medium text-label-md font-label-md transition-colors">
+            In Progress <span class="ml-1 opacity-70">3</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-medium text-label-md font-label-md transition-colors">
+            Completed <span class="ml-1 opacity-70">2</span>
+</button>
+<div class="h-4 w-px bg-outline-variant mx-1"></div>
+<!-- Priority Filters -->
+<button class="px-3 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-label-sm font-label-sm font-medium hover:bg-rose-100 transition-colors">
+            Haute / Urgente
+          </button>
+<button class="px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-label-sm font-label-sm font-medium hover:bg-amber-100 transition-colors">
+            Moyenne
+          </button>
+<button class="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-label-sm font-label-sm font-medium hover:bg-emerald-100 transition-colors">
+            Basse
+          </button>
+</div>
+<!-- Sorting & Mini indicator -->
+<div class="flex items-center gap-2 text-on-surface-variant text-label-sm font-label-sm">
+<span>Trié par : <strong>Priorité cognitive (IA)</strong></span>
+<button class="p-1.5 rounded hover:bg-surface-container text-outline hover:text-on-surface">
+<span class="material-symbols-outlined text-base">filter_list</span>
+</button>
+</div>
+</section>
+<!-- TASK LIST (Responsive Card Rows with Micro-interactions) -->
+<section class="flex flex-col gap-3">
+<!-- TASK CARD 1: Postgres Schema (Targeted in anti-procrastination flow) -->
+<div class="group bg-surface-container-lowest border border-outline-variant/80 rounded-2xl p-4 transition-all duration-200 hover:border-primary/50 hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-rose-500"></div>
+<!-- Checkbox & Title Details -->
+<div class="flex items-center gap-3.5 flex-1 min-w-0 pl-1">
+<input class="w-5 h-5 rounded border-2 border-outline-variant text-primary focus:ring-0 focus:ring-offset-0 cursor-pointer transition-colors" type="checkbox"/>
+<div class="truncate">
+<div class="flex items-center gap-2.5">
+<span class="text-headline-sm font-headline-sm text-on-surface font-semibold truncate hover:text-primary cursor-pointer">
+                  Finaliser la structure de la base de données PostgreSQL
+                </span>
+<span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-label-sm font-label-sm font-semibold shrink-0">
+                  Haute / Urgente
+                </span>
+</div>
+<div class="flex items-center gap-3 mt-1 text-on-surface-variant text-body-sm font-body-sm">
+<span class="flex items-center gap-1 text-outline">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                  Échéance : 14h30
+                </span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="flex items-center gap-1 text-secondary font-medium">
+<span class="material-symbols-outlined text-sm">account_tree</span>
+                  4 sous-tâches identifiées
+                </span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-rose-600 bg-rose-50/60 px-1.5 py-0.2 rounded font-code-mono text-[11px]">Bloqué depuis 45 min</span>
+</div>
+</div>
+</div>
+<!-- Assignee & Prominent Action Button -->
+<div class="flex items-center gap-4 shrink-0 pl-8 md:pl-0">
+<!-- Assignee Chip -->
+<div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-container-low border border-outline-variant/50">
+<img alt="Assignee avatar chip" class="w-6 h-6 rounded-full object-cover" data-alt="Close up face shot of young professional software engineer with glasses smiling slightly in bright studio lighting with neutral soft background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlorqfr-X1vBahM7oroMSY2oP_qjtZJlXawZBEsok0UEbivri03qfvpk-OZbfji6B1EjwrvZLweNqywNQsUTBZqIhM4X9l5vXEfSKmhmE4uDzEa7cpWE183glSqdLkrgmuVTsMQT2adEqS3E27dRlvoMAo9C3ywWIs4h7nbzLK9OQ4fYXi81sfb1xMA4oYoGFR4_l8mAcElYp0sLM4vf9aLr8eVdErp-SOnzgR5U-DutvQPzTl4UhWjJXCh3cwdA1Zrorizp9r0Bo"/>
+<span class="text-label-sm font-label-sm text-on-surface font-medium">Thomas</span>
+</div>
+<!-- PROMINENT CALL-TO-ACTION BUTTON (Aide IA) -->
+<button class="px-4 py-2 rounded-xl bg-gradient-to-r from-primary to-secondary text-on-primary font-label-md text-label-md font-semibold flex items-center gap-2 shadow-sm shadow-primary/20 hover:scale-[1.02] hover:shadow-primary/30 transition-all active:scale-[0.98]" onclick="document.getElementById('anti-procrastination-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span>Je bloque (Aide IA)</span>
+</button>
+</div>
+</div>
+<!-- TASK CARD 2: API Documentation -->
+<div class="group bg-surface-container-lowest border border-outline-variant/80 rounded-2xl p-4 transition-all duration-200 hover:border-amber-400/50 hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-amber-500"></div>
+<!-- Checkbox & Title Details -->
+<div class="flex items-center gap-3.5 flex-1 min-w-0 pl-1">
+<input class="w-5 h-5 rounded border-2 border-outline-variant text-primary focus:ring-0 focus:ring-offset-0 cursor-pointer transition-colors" type="checkbox"/>
+<div class="truncate">
+<div class="flex items-center gap-2.5">
+<span class="text-headline-sm font-headline-sm text-on-surface font-semibold truncate hover:text-primary cursor-pointer">
+                  Rédiger la documentation API v2
+                </span>
+<span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-label-sm font-label-sm font-semibold shrink-0">
+                  Moyenne
+                </span>
+<span class="px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-purple-200/80 text-[11px] font-code-mono hidden sm:inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">smart_toy</span> Brouillon prêt
+                </span>
+</div>
+<div class="flex items-center gap-3 mt-1 text-on-surface-variant text-body-sm font-body-sm">
+<span class="flex items-center gap-1 text-outline">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                  Échéance : Demain 11:00
+                </span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-tertiary font-medium">Sprint Core API</span>
+</div>
+</div>
+</div>
+<!-- Assignee & Action -->
+<div class="flex items-center gap-4 shrink-0 pl-8 md:pl-0">
+<div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-container-low border border-outline-variant/50">
+<img alt="Sarah avatar chip" class="w-6 h-6 rounded-full object-cover" data-alt="Portrait of a female technical writer with warm smile in modern bright office setting with light color palette and gentle depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaNztjFEtbhzQAw_R-xspowKO7Fibgaomuq6_jo6gYSJJloQPeR28aIF75HkemMQtUuJGuBTs4yV1R2OOQWUurd9RHw4OmFJwWb76DiTdDHFdyn82MlHZF1wvLU16bEe24GjavtK2cAu0Ta3uzoS7-2ViWI1iwypgxCMJiaHWez2VbpinT1br5rcN1vMxL63Z1X5BGQC6PNd23PKkiJqiK5lXo5d_WMXNPU94sy44pBfLH2jDXLs4SUqQu2TEKxqtv_fcCJm-GBcE"/>
+<span class="text-label-sm font-label-sm text-on-surface font-medium">Sarah D.</span>
+</div>
+<button class="px-3.5 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container border border-outline-variant text-primary font-label-md text-label-md font-semibold flex items-center gap-1.5 transition-all" onclick="document.getElementById('anti-procrastination-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-base text-secondary">psychology</span>
+<span>Découper</span>
+</button>
+</div>
+</div>
+<!-- TASK CARD 3: Complex Queries Optimization -->
+<div class="group bg-surface-container-lowest border border-outline-variant/80 rounded-2xl p-4 transition-all duration-200 hover:border-emerald-400/50 hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-emerald-500"></div>
+<!-- Checkbox & Title Details -->
+<div class="flex items-center gap-3.5 flex-1 min-w-0 pl-1">
+<input class="w-5 h-5 rounded border-2 border-outline-variant text-primary focus:ring-0 focus:ring-offset-0 cursor-pointer transition-colors" type="checkbox"/>
+<div class="truncate">
+<div class="flex items-center gap-2.5">
+<span class="text-headline-sm font-headline-sm text-on-surface font-semibold truncate hover:text-primary cursor-pointer">
+                  Optimisation des requêtes complexes &amp; Indexing Elasticsearch
+                </span>
+<span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-label-sm font-label-sm font-semibold shrink-0">
+                  Basse
+                </span>
+</div>
+<div class="flex items-center gap-3 mt-1 text-on-surface-variant text-body-sm font-body-sm">
+<span class="flex items-center gap-1 text-outline">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                  Échéance : Vendredi
+                </span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-on-surface-variant">Performances +30% ciblées</span>
+</div>
+</div>
+</div>
+<!-- Assignee & Action -->
+<div class="flex items-center gap-4 shrink-0 pl-8 md:pl-0">
+<div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-container-low border border-outline-variant/50">
+<img alt="Alex avatar chip" class="w-6 h-6 rounded-full object-cover" data-alt="Portrait of senior backend architect in minimalist modern workshop office, soft daylight ambiance, serene confident expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrL7E-xn5NxrhKGZMJIjJWXmbcx1Ork2y_tFHyjTylAv9GSDqIF2BRN1ShjCLDR1Txp5PcbGq7x1gBnp4Q_0dpkHR6NBikBEP2HHBOe9ONBxEOiykliHdrSQc-1q9ox_pntMbTse48vghdocwp-IH1-v_3pUh2XkJWkwQ4mbt-dDpzzGwFLosNCFq6bfQ9IrEg7TIGio2f_Nrx9XRa3_z0kaAV5KBmj42BuKxmhRQ2LBu6IO_MIc2ZXBArIlNqXZYYazo9r3e8KJ4"/>
+<span class="text-label-sm font-label-sm text-on-surface font-medium">Alexandre</span>
+</div>
+<button class="px-3.5 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container border border-outline-variant text-on-surface-variant font-label-md text-label-md font-medium flex items-center gap-1.5 transition-all" onclick="document.getElementById('anti-procrastination-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-base">smart_toy</span>
+<span>Aide IA</span>
+</button>
+</div>
+</div>
+<!-- TASK CARD 4: Completed Item (Demonstrating task strikethrough & completion design token) -->
+<div class="bg-surface-container-lowest/60 border border-outline-variant/40 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 opacity-75">
+<div class="flex items-center gap-3.5 flex-1 min-w-0 pl-1">
+<div class="w-5 h-5 rounded bg-tertiary flex items-center justify-center text-on-tertiary">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+<div class="truncate">
+<span class="text-headline-sm font-headline-sm text-on-surface-variant line-through truncate font-medium">
+                Déploiement des secrets d'environnement sur Kubernetes Staging
+              </span>
+<div class="flex items-center gap-2 mt-0.5 text-xs text-tertiary">
+<span class="material-symbols-outlined text-xs">task_alt</span>
+                Validé ce matin à 09:15
+              </div>
+</div>
+</div>
+<div class="flex items-center gap-3 pl-8 md:pl-0">
+<span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-label-sm font-label-sm font-semibold">Terminé</span>
+</div>
+</div>
+</section>
+<!-- BOTTOM PRODUCTIVITY & POMODORO BANNER -->
+<section class="mt-8 p-4 rounded-2xl bg-gradient-to-r from-surface-container-lowest via-surface-container-low to-secondary-fixed/20 border border-outline-variant/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">timer</span>
+</div>
+<div>
+<div class="text-headline-sm font-headline-sm font-bold text-on-surface">Rythme de concentration optimal</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Votre pic cognitif est prévu entre 10h00 et 11h45. Lancez un sprint sans interruption.</div>
+</div>
+</div>
+<div class="flex items-center gap-3 w-full md:w-auto justify-end">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-lowest border border-outline-variant/60 font-code-mono text-sm font-semibold text-primary">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            25:00
+          </div>
+<button class="px-4 py-2 rounded-xl bg-on-surface text-surface font-label-md text-label-md font-semibold hover:bg-on-surface-variant transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base">play_arrow</span>
+<span>Démarrer Pomodoro (25 min)</span>
+</button>
+</div>
+</section>
+</main>
+</div>
+<!-- CENTERED ANTI-PROCRASTINATION MODAL (Requested Modal Overlay with backdrop blur) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop transition-opacity" id="anti-procrastination-modal">
+<!-- Modal Card (Elevation Level 3 + Glassmorphic AI Ambient Glow) -->
+<div class="relative w-full max-w-xl bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-2xl p-6 sm:p-7 ai-glow-card animate-in fade-in zoom-in-95 duration-150">
+<!-- Top Close Button -->
+<button class="absolute top-5 right-5 p-1.5 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container transition-colors" onclick="document.getElementById('anti-procrastination-modal').classList.add('hidden')" title="Fermer la boîte de dialogue">
+<span class="material-symbols-outlined text-xl">close</span>
+</button>
+<!-- Modal Header with Glowing AI Coach Icon -->
+<div class="flex items-start gap-4 pr-8">
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-on-primary shadow-lg shadow-primary/30 shrink-0">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div>
+<h2 class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight leading-snug">
+            Besoin d'un coup de pouce ? Débloquons ça ensemble !
+          </h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">
+            La procrastination est souvent un simple problème de friction d'amorce. Réduisons l'effort à zéro.
+          </p>
+</div>
+</div>
+<!-- Targeted Task Pill -->
+<div class="mt-5 p-3 rounded-xl bg-surface-container-low border border-outline-variant/60 flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-lg">flag</span>
+<div class="text-body-sm font-body-sm text-on-surface truncate">
+<span class="text-outline font-medium">Tâche ciblée :</span>
+<span class="font-semibold text-primary">Finaliser la structure de la base de données PostgreSQL</span>
+</div>
+</div>
+<!-- Highlighted 2-minute Micro Action Card ('Friction Zéro') -->
+<div class="mt-4 p-5 rounded-2xl bg-gradient-to-b from-primary-fixed/30 to-surface-container-lowest border border-primary/30 shadow-xs relative overflow-hidden">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="text-headline-sm font-headline-sm font-bold text-primary flex items-center gap-1.5">
+<span>⚡ Micro-action de 2 minutes</span>
+</span>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold tracking-wide border border-emerald-300">
+            Friction Zéro
+          </span>
+</div>
+<p class="text-body-md font-body-md text-on-surface leading-relaxed mt-2">
+          Le secret pour démarrer : n'essayez pas de tout concevoir maintenant. Ouvrez simplement votre terminal ou DBeaver et créez une table vierge nommée <code class="px-1.5 py-0.5 rounded bg-surface-container border border-outline-variant font-code-mono text-secondary font-semibold text-xs">users_temp</code>.
+        </p>
+<!-- Metadata Chips -->
+<div class="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-outline-variant/40">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-container text-on-surface-variant font-code-mono text-[11px]">
+<span class="material-symbols-outlined text-xs text-primary">timer</span>
+            Temps estimé : 1 min 45 s
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-container text-on-surface-variant font-code-mono text-[11px]">
+<span class="material-symbols-outlined text-xs text-emerald-600">sentiment_satisfied</span>
+            Effort mental : Très faible
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-secondary-fixed text-secondary font-code-mono text-[11px] font-semibold">
+<span class="material-symbols-outlined text-xs">flare</span>
+            Dopamine +15%
+          </span>
+</div>
+</div>
+<!-- Modal Action Buttons -->
+<div class="mt-6 flex flex-col sm:flex-row items-center gap-3">
+<!-- Primary Button: '✨ Completed this step' -->
+<button class="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-primary to-secondary text-on-primary font-label-md text-label-md font-bold flex items-center justify-center gap-2 shadow-md shadow-primary/25 hover:opacity-95 transition-all active:scale-[0.98]" onclick="document.getElementById('anti-procrastination-modal').classList.add('hidden')">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>✨ J'ai fait cette étape !</span>
+</button>
+<!-- Secondary Button: '🔄 Suggest another step' -->
+<button class="w-full sm:w-auto py-3 px-4 rounded-xl bg-surface-container-low border border-outline-variant text-on-surface font-label-md text-label-md font-semibold hover:bg-surface-container transition-colors active:scale-[0.98] flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-base">cached</span>
+<span>Autre suggestion</span>
+</button>
+</div>
+<!-- Sub-action Link -->
+<div class="mt-4 text-center">
+<a class="text-secondary hover:text-primary text-label-sm font-label-sm font-semibold transition-colors inline-flex items-center gap-1 hover:underline" href="#breakdown">
+<span>Découper en 4 sous-tâches faciles</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<script>
+    // Lightweight script to handle keyboard escape key for the modal dialog
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('anti-procrastination-modal');
+        if (modal && !modal.classList.contains('hidden')) {
+          modal.classList.add('hidden');
+        }
+      }
+    });
+  </script>
+</body></html>

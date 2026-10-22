@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-surface" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BenchFlow - Tech Talent Hub &amp; Staffing Management</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-container": "#7531e6",
+            "on-secondary": "#ffffff",
+            "primary-fixed-dim": "#c3c0ff",
+            "secondary-fixed": "#dae2fd",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-tertiary-fixed": "#25005a",
+            "surface-variant": "#d3e4fe",
+            "secondary": "#565e74",
+            "on-primary-container": "#dad7ff",
+            "on-error-container": "#93000a",
+            "surface-container-highest": "#d3e4fe",
+            "on-primary-fixed": "#0f0069",
+            "inverse-surface": "#213145",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed-dim": "#d2bbff",
+            "tertiary": "#5c00ca",
+            "on-secondary-fixed": "#131b2e",
+            "outline-variant": "#c7c4d8",
+            "surface": "#f8f9ff",
+            "on-tertiary-fixed-variant": "#5a00c6",
+            "primary-container": "#4f46e5",
+            "on-primary": "#ffffff",
+            "secondary-container": "#dae2fd",
+            "inverse-on-surface": "#eaf1ff",
+            "outline": "#777587",
+            "secondary-fixed-dim": "#bec6e0",
+            "primary": "#3525cd",
+            "on-secondary-container": "#5c647a",
+            "tertiary-fixed": "#eaddff",
+            "on-tertiary-container": "#e4d4ff",
+            "error-container": "#ffdad6",
+            "surface-dim": "#cbdbf5",
+            "on-surface-variant": "#464555",
+            "on-tertiary": "#ffffff",
+            "surface-bright": "#f8f9ff",
+            "surface-container-low": "#eff4ff",
+            "error": "#ba1a1a",
+            "background": "#f8f9ff",
+            "surface-container": "#e5eeff",
+            "inverse-primary": "#c3c0ff",
+            "on-surface": "#0b1c30",
+            "surface-tint": "#4d44e3",
+            "surface-container-high": "#dce9ff",
+            "on-secondary-fixed-variant": "#3f465c",
+            "primary-fixed": "#e2dfff",
+            "on-background": "#0b1c30",
+            "on-error": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "gutter": "1rem",
+            "margin-desktop": "2rem",
+            "space-md": "0.75rem",
+            "space-xs": "0.25rem",
+            "space-lg": "1.25rem",
+            "gutter-desktop": "1.5rem",
+            "margin": "1rem",
+            "space-sm": "0.5rem",
+            "space-xl": "2rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "label-xs": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-lg": ["15px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-xl-mobile": ["26px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "label-xs": ["10px", { "lineHeight": "12px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "headline-sm": ["15px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-lg-mobile": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-xl": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Hairline micro borders & soft lifts */
+    .card-shell {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+    }
+    .card-shell:hover {
+      border-color: #CBD5E1;
+      box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+    }
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col font-body-md text-on-surface bg-surface antialiased selection:bg-primary-fixed selection:text-primary">
+<!-- TOP APP BAR / BRAND HEADER -->
+<header class="bg-surface-container-lowest border-b border-outline-variant/30 sticky top-0 z-40 shadow-sm">
+<div class="flex justify-between items-center w-full px-margin-desktop h-16">
+<!-- Logo + Badge + Main Nav Links -->
+<div class="flex items-center space-x-space-lg">
+<!-- Logo -->
+<div class="flex items-center space-x-space-sm cursor-pointer select-none">
+<img alt="BenchFlow Logo" class="h-9 w-9 rounded-xl object-contain border border-outline-variant/20 shadow-xs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0UVJPnUTSFwhcNm9KlnpQS9WA-aJLGJh3K7qQ2b9DOfDYNDyucbbeEhFA-y6pkgzSfdgD42JDRYzbkbmuxn1POAGgLQ-cG31VmztD0PSfkvLomfKY3cUJ9EEWmvr1NSbz1BcIdL5_Kz01jmfhX-QjuK7NQnMQ_t0Zl0XwxYSmdshyvBETKsXrV6z5C-_B9ZiKuBMShoZSdSJdmHntecuNud4LipwYqjiL8firNC2Oo7VLAJjo5KzcksBHshE88p0XV0hyj9dXgpo"/>
+<div class="flex items-center space-x-2">
+<span class="text-headline-md font-headline-md font-extrabold text-primary tracking-tight">BenchFlow</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-indigo-50 text-primary-container border border-indigo-200">
+              Tech Talent Hub
+            </span>
+</div>
+</div>
+<div class="h-6 w-px bg-slate-200"></div>
+<!-- Navigation Links (Interactive Tabs) -->
+<nav class="hidden md:flex items-center space-x-6 text-label-md font-label-md pt-3">
+<button class="nav-btn flex items-center space-x-2 text-primary border-b-2 border-primary font-semibold pb-3.5 transition-colors" id="nav-tab-1" onclick="switchTab('tab-1')">
+<span>Radar des Staffings</span>
+<span class="px-1.5 py-0.5 rounded-full text-label-xs font-label-xs bg-rose-50 text-rose-700 border border-rose-200">3 alertes</span>
+</button>
+<button class="nav-btn flex items-center space-x-2 text-secondary hover:text-on-surface font-medium pb-3.5 border-b-2 border-transparent transition-colors" id="nav-tab-2" onclick="switchTab('tab-2')">
+<span>Réserve d'Initiatives</span>
+<span class="px-1.5 py-0.5 rounded-full text-label-xs font-label-xs bg-indigo-50 text-primary-container border border-indigo-200">8 projets</span>
+</button>
+<button class="nav-btn flex items-center space-x-2 text-secondary hover:text-on-surface font-medium pb-3.5 border-b-2 border-transparent transition-colors" id="nav-tab-3" onclick="switchTab('tab-3')">
+<span>Suivi &amp; Validations</span>
+<span class="px-1.5 py-0.5 rounded-full text-label-xs font-label-xs bg-amber-50 text-amber-700 border border-amber-200">2 en attente</span>
+</button>
+</nav>
+</div>
+<!-- Right Header Actions & Persona Switcher -->
+<div class="flex items-center space-x-space-md">
+<!-- Search bar on right -->
+<div class="relative hidden lg:block w-64">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 text-body-sm font-body-sm rounded-xl border border-slate-300 focus:border-primary-container focus:ring-1 focus:ring-primary-container/20 placeholder-slate-400 outline-none transition-all" placeholder="Rechercher consultant, techno..." type="text"/>
+</div>
+<!-- Bell Notifications with Counter -->
+<div class="relative">
+<button class="p-2 rounded-xl text-secondary hover:bg-slate-100 hover:text-on-surface transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-600 ring-2 ring-white"></span>
+</button>
+</div>
+<!-- Settings / Tune -->
+<button class="p-2 rounded-xl text-secondary hover:bg-slate-100 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">tune</span>
+</button>
+<div class="h-6 w-px bg-slate-200"></div>
+<!-- Persona Switcher Dropdown Anchor -->
+<div class="relative">
+<button class="flex items-center space-x-2.5 px-2.5 py-1.5 rounded-xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all text-left" onclick="togglePersonaDropdown()">
+<div class="w-7 h-7 rounded-full bg-gradient-to-tr from-indigo-600 to-indigo-400 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+              TL
+            </div>
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 font-medium leading-none">Connecté en tant que</span>
+<span class="text-label-md font-label-md text-slate-900 leading-tight" id="active-persona-label">Thomas Laurent (Manager)</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-[18px]">expand_more</span>
+</button>
+<!-- Dropdown Menu -->
+<div class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl border border-slate-200 shadow-xl z-50 p-2 py-2" id="persona-dropdown">
+<div class="px-3 py-1.5 mb-1 border-b border-slate-100">
+<span class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Changer de persona (Simulation)</span>
+</div>
+<!-- Thomas (Active) -->
+<button class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left hover:bg-slate-50 transition-colors group bg-indigo-50/50" onclick="selectPersona('Thomas Laurent (Manager)', 'TL', 'bg-indigo-600')">
+<div class="flex items-center space-x-2.5">
+<div class="w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">TL</div>
+<div>
+<div class="text-label-md font-label-md text-slate-900">Thomas Laurent</div>
+<div class="text-[11px] text-slate-500">Practice Manager / Staffing Lead</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-[18px]">check</span>
+</button>
+<!-- Sara -->
+<button class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left hover:bg-slate-50 transition-colors group" onclick="selectPersona('Sara Benali (Dev React/Node)', 'SB', 'bg-emerald-600')">
+<div class="flex items-center space-x-2.5">
+<div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">SB</div>
+<div>
+<div class="text-label-md font-label-md text-slate-900">Sara Benali</div>
+<div class="text-[11px] text-rose-600 font-medium">Intercontrat J+2 • React / Node</div>
+</div>
+</div>
+<span class="text-label-xs font-label-xs px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Dev</span>
+</button>
+<!-- Ahmed -->
+<button class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left hover:bg-slate-50 transition-colors group" onclick="selectPersona('Ahmed Kabbaj (QA Lead)', 'AK', 'bg-amber-600')">
+<div class="flex items-center space-x-2.5">
+<div class="w-7 h-7 rounded-full bg-amber-600 text-white flex items-center justify-center text-xs font-bold">AK</div>
+<div>
+<div class="text-label-md font-label-md text-slate-900">Ahmed Kabbaj</div>
+<div class="text-[11px] text-amber-600 font-medium">Fin dans 11j • Playwright Lead</div>
+</div>
+</div>
+<span class="text-label-xs font-label-xs px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">QA</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- TOAST FEEDBACK NOTIFICATION CONTAINER -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center space-x-3 px-4 py-3 rounded-xl bg-slate-900 text-white shadow-2xl border border-slate-700" id="toast">
+<span class="material-symbols-outlined text-emerald-400 text-[20px]">check_circle</span>
+<span class="text-body-md font-body-md" id="toast-message">Action exécutée avec succès</span>
+</div>
+<!-- MAIN CANVAS -->
+<main class="flex-1 w-full max-w-[1440px] mx-auto px-margin-desktop py-space-xl">
+<!-- ========================================== -->
+<!-- TAB 1: RADAR DES STAFFINGS -->
+<!-- ========================================== -->
+<div class="tab-content block space-y-space-xl" id="tab-view-1">
+<!-- KPI Metric Header Strip -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter-desktop">
+<!-- Card 1: Stables -->
+<div class="card-shell rounded-xl p-space-lg flex items-center justify-between border-l-4 border-l-emerald-500">
+<div>
+<div class="flex items-center space-x-1.5 text-label-sm font-label-sm text-slate-500 uppercase tracking-wider">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span>Staffings Stables</span>
+</div>
+<div class="text-headline-xl font-headline-xl text-slate-900 mt-1">12</div>
+<div class="text-body-sm font-body-sm text-slate-500 mt-0.5">&gt; 30 jours restants • 0 risque opérationnel</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">verified_user</span>
+</div>
+</div>
+<!-- Card 2: Fin Imminente -->
+<div class="card-shell rounded-xl p-space-lg flex items-center justify-between border-l-4 border-l-amber-500 bg-amber-50/20">
+<div>
+<div class="flex items-center space-x-1.5 text-label-sm font-label-sm text-amber-700 uppercase tracking-wider font-semibold">
+<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+<span>Fin Imminente</span>
+</div>
+<div class="text-headline-xl font-headline-xl text-slate-900 mt-1">3</div>
+<div class="text-body-sm font-body-sm text-amber-700/80 mt-0.5">&lt; 15 jours • Action de repositionnement requise</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-amber-100/70 text-amber-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">schedule</span>
+</div>
+</div>
+<!-- Card 3: Intercontrat -->
+<div class="card-shell rounded-xl p-space-lg flex items-center justify-between border-l-4 border-l-rose-500 bg-rose-50/25">
+<div>
+<div class="flex items-center space-x-1.5 text-label-sm font-label-sm text-rose-700 uppercase tracking-wider font-semibold">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span>
+<span>En Intercontrat (Bench)</span>
+</div>
+<div class="text-headline-xl font-headline-xl text-rose-600 mt-1">2</div>
+<div class="text-body-sm font-body-sm text-rose-700/80 mt-0.5">Disponibilité immédiate pour missions &amp; initiatives</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">person_off</span>
+</div>
+</div>
+</div>
+<!-- Filter & Action Toolbar -->
+<div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 bg-white p-3 rounded-xl border border-slate-200">
+<div class="flex flex-wrap items-center gap-2">
+<!-- Role Filters -->
+<button class="px-3 py-1.5 text-label-md font-label-md rounded-lg bg-slate-900 text-white">Tous (17)</button>
+<button class="px-3 py-1.5 text-label-md font-label-md rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Devs (9)</button>
+<button class="px-3 py-1.5 text-label-md font-label-md rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">QA (3)</button>
+<button class="px-3 py-1.5 text-label-md font-label-md rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">DevOps (3)</button>
+<button class="px-3 py-1.5 text-label-md font-label-md rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Product / Data (2)</button>
+</div>
+<div class="flex items-center space-x-3">
+<!-- Quick Filter Status -->
+<div class="relative">
+<select class="text-body-sm font-body-sm rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-700 focus:outline-none focus:ring-1 focus:ring-primary">
+<option>Tous les statuts de criticité</option>
+<option>🔴 Intercontrat uniquement</option>
+<option>🟠 Fin &lt; 15j</option>
+<option>🟢 En mission stable</option>
+</select>
+</div>
+<!-- Add Collaborator Button -->
+<button class="flex items-center space-x-1.5 bg-primary-container text-white px-3.5 py-1.5 rounded-lg text-label-md font-label-md hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-xs" onclick="triggerToast('Module d\'ajout d\'un consultant ouvert')">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>+ Ajouter collaborateur</span>
+</button>
+</div>
+</div>
+<!-- Roster Data Table -->
+<div class="card-shell rounded-xl overflow-hidden">
+<div class="px-space-lg py-3 bg-white border-b border-slate-100 flex justify-between items-center">
+<div class="flex items-center space-x-2">
+<h2 class="text-headline-sm font-headline-sm text-slate-900">Roster des Talents &amp; Disponibilités</h2>
+<span class="text-xs text-slate-400 font-normal">Mis à jour en temps réel</span>
+</div>
+<span class="text-label-xs font-label-xs text-slate-500 uppercase tracking-wider">6 profils prioritaires affichés</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+<th class="py-3 px-space-lg">Collaborateur</th>
+<th class="py-3 px-4">Rôle &amp; Stack Technique</th>
+<th class="py-3 px-4">Mission Actuelle / Client</th>
+<th class="py-3 px-4">Échéance &amp; Décompte</th>
+<th class="py-3 px-4">Statut de Disponibilité</th>
+<th class="py-3 px-space-lg text-right">Action Stratégique</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-body-md font-body-md">
+<!-- Row 1: Marc Dupont (Amber) -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3.5 px-space-lg">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs">MD</div>
+<div>
+<div class="font-semibold text-slate-900 leading-tight">Marc Dupont</div>
+<div class="text-[11px] text-slate-500">Lead Dev • 6 ans exp.</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">React</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Node.js</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">TypeScript</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-medium text-slate-900">BNP Paribas</div>
+<div class="text-[11px] text-slate-500">Refonte E-Banking Wealth</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-semibold text-amber-700 flex items-center space-x-1">
+<span class="material-symbols-outlined text-[16px]">hourglass_top</span>
+<span>Fin dans 6 jours</span>
+</div>
+<div class="w-24 bg-slate-200 h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-amber-500 h-full rounded-full" style="width: 88%"></div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-amber-50 text-amber-700 border border-amber-200">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
+                    &lt; 15j - Fin imminente
+                  </span>
+</td>
+<td class="py-3.5 px-space-lg text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="px-2.5 py-1.5 rounded-lg text-label-sm font-label-sm bg-indigo-50 text-primary-container hover:bg-indigo-100 border border-indigo-200 transition-colors font-semibold flex items-center space-x-1" onclick="proposeInitiative('Marc Dupont')">
+<span class="material-symbols-outlined text-[15px]">assignment_add</span>
+<span>Proposer initiative</span>
+</button>
+<button class="p-1 rounded text-slate-400 hover:text-slate-700">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Sara Benali (Red - Intercontrat) -->
+<tr class="hover:bg-rose-50/20 bg-rose-50/10 transition-colors">
+<td class="py-3.5 px-space-lg">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-rose-600 text-white font-bold flex items-center justify-center text-xs">SB</div>
+<div>
+<div class="font-semibold text-slate-900 leading-tight">Sara Benali</div>
+<div class="text-[11px] text-rose-600 font-medium">Dev Backend • 4 ans exp.</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Go</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">PostgreSQL</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">gRPC</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="text-slate-400 italic">Dernier client : AXA France</div>
+<div class="text-[11px] text-slate-400">Mission clôturée le 28/02</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-semibold text-rose-700 flex items-center space-x-1">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+<span>Intercontrat J+2</span>
+</div>
+<div class="text-[11px] text-slate-500 mt-0.5">Coût bench journalier : 480€</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-rose-50 text-rose-700 border border-rose-200">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5"></span>
+                    Intercontrat - Disponible
+                  </span>
+</td>
+<td class="py-3.5 px-space-lg text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="px-2.5 py-1.5 rounded-lg text-label-sm font-label-sm bg-rose-600 text-white hover:bg-rose-700 transition-colors font-semibold shadow-xs flex items-center space-x-1" onclick="proposeInitiative('Sara Benali')">
+<span class="material-symbols-outlined text-[15px]">bolt</span>
+<span>Assigner initiative</span>
+</button>
+<button class="p-1 rounded text-slate-400 hover:text-slate-700">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Ahmed Kabbaj (Amber) -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3.5 px-space-lg">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-amber-100 text-amber-800 font-bold flex items-center justify-center text-xs">AK</div>
+<div>
+<div class="font-semibold text-slate-900 leading-tight">Ahmed Kabbaj</div>
+<div class="text-[11px] text-slate-500">QA Automation Lead • 7 ans exp.</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Playwright</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Cypress</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">CI/CD</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-medium text-slate-900">Engie Digital</div>
+<div class="text-[11px] text-slate-500">Framework QA Multi-Tenant</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-semibold text-amber-700 flex items-center space-x-1">
+<span class="material-symbols-outlined text-[16px]">hourglass_top</span>
+<span>Fin dans 11 jours</span>
+</div>
+<div class="w-24 bg-slate-200 h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-amber-500 h-full rounded-full" style="width: 79%"></div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-amber-50 text-amber-700 border border-amber-200">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
+                    &lt; 15j - Fin imminente
+                  </span>
+</td>
+<td class="py-3.5 px-space-lg text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="px-2.5 py-1.5 rounded-lg text-label-sm font-label-sm bg-indigo-50 text-primary-container hover:bg-indigo-100 border border-indigo-200 transition-colors font-semibold flex items-center space-x-1" onclick="proposeInitiative('Ahmed Kabbaj')">
+<span class="material-symbols-outlined text-[15px]">assignment_add</span>
+<span>Proposer initiative</span>
+</button>
+<button class="p-1 rounded text-slate-400 hover:text-slate-700">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Lucas Mercier (Green) -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3.5 px-space-lg">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs">LM</div>
+<div>
+<div class="font-semibold text-slate-900 leading-tight">Lucas Mercier</div>
+<div class="text-[11px] text-slate-500">DevOps Cloud • 5 ans exp.</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">AWS</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Kubernetes</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Terraform</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-medium text-slate-900">L'Oréal</div>
+<div class="text-[11px] text-slate-500">Modernisation Cloud Global</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-semibold text-emerald-700 flex items-center space-x-1">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>45 jours restants</span>
+</div>
+<div class="w-24 bg-slate-200 h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-emerald-500 h-full rounded-full" style="width: 40%"></div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+                    &gt; 30j - En mission
+                  </span>
+</td>
+<td class="py-3.5 px-space-lg text-right">
+<div class="flex items-center justify-end space-x-2">
+<span class="text-xs text-slate-400">Mission stable</span>
+<button class="p-1 rounded text-slate-400 hover:text-slate-700">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Clara Chen (Green) -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3.5 px-space-lg">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs">CC</div>
+<div>
+<div class="font-semibold text-slate-900 leading-tight">Clara Chen</div>
+<div class="text-[11px] text-slate-500">Product Owner • 6 ans exp.</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Agile / Scrum</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Jira</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Product Ops</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-medium text-slate-900">TotalEnergies</div>
+<div class="text-[11px] text-slate-500">Plateforme Fleet Management</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-semibold text-emerald-700 flex items-center space-x-1">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>90 jours restants</span>
+</div>
+<div class="w-24 bg-slate-200 h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-emerald-500 h-full rounded-full" style="width: 20%"></div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+                    &gt; 30j - En mission
+                  </span>
+</td>
+<td class="py-3.5 px-space-lg text-right">
+<div class="flex items-center justify-end space-x-2">
+<span class="text-xs text-slate-400">Mission stable</span>
+<button class="p-1 rounded text-slate-400 hover:text-slate-700">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: Julien Roy (Red - Intercontrat) -->
+<tr class="hover:bg-rose-50/20 bg-rose-50/10 transition-colors">
+<td class="py-3.5 px-space-lg">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-rose-600 text-white font-bold flex items-center justify-center text-xs">JR</div>
+<div>
+<div class="font-semibold text-slate-900 leading-tight">Julien Roy</div>
+<div class="text-[11px] text-rose-600 font-medium">Data Engineer • 3 ans exp.</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Python</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Airflow</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Snowflake</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="text-slate-400 italic">Dernier client : Carrefour</div>
+<div class="text-[11px] text-slate-400">Migration Data Lake</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-semibold text-rose-700 flex items-center space-x-1">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+<span>Intercontrat J+1</span>
+</div>
+<div class="text-[11px] text-slate-500 mt-0.5">Coût bench journalier : 460€</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-rose-50 text-rose-700 border border-rose-200">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5"></span>
+                    Intercontrat - Disponible
+                  </span>
+</td>
+<td class="py-3.5 px-space-lg text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="px-2.5 py-1.5 rounded-lg text-label-sm font-label-sm bg-rose-600 text-white hover:bg-rose-700 transition-colors font-semibold shadow-xs flex items-center space-x-1" onclick="proposeInitiative('Julien Roy')">
+<span class="material-symbols-outlined text-[15px]">bolt</span>
+<span>Assigner initiative</span>
+</button>
+<button class="p-1 rounded text-slate-400 hover:text-slate-700">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- TAB 2: RÉSERVE D'INITIATIVES -->
+<!-- ========================================== -->
+<div class="tab-content hidden space-y-space-lg" id="tab-view-2">
+<!-- Subheader & Description -->
+<div class="flex flex-col md:flex-row md:items-center justify-between pb-2 border-b border-slate-200 gap-4">
+<div>
+<h1 class="text-headline-lg font-headline-lg text-slate-900">Réserve d'Initiatives &amp; Projets Internes</h1>
+<p class="text-body-md font-body-md text-slate-600 mt-0.5">
+            Missions pré-approuvées à forte valeur ajoutée pour les consultants en fin de mission ou en intercontrat. Finançables immédiatement.
+          </p>
+</div>
+<div class="flex items-center space-x-2 self-start md:self-auto">
+<span class="px-3 py-1 rounded-full text-label-sm font-label-sm bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center space-x-1">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>Budget R&amp;D / Innovation débloqué</span>
+</span>
+</div>
+</div>
+<!-- Filter Toolbar -->
+<div class="card-shell rounded-xl p-3 flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-3">
+<!-- Left: Filters by Role & Duration -->
+<div class="flex flex-wrap items-center gap-2">
+<span class="text-xs font-semibold text-slate-400 uppercase mr-1">Rôles :</span>
+<button class="initiative-role-filter px-2.5 py-1 rounded-lg text-label-sm font-label-sm bg-slate-900 text-white font-medium" onclick="filterInitiatives('all')">Tous les rôles (8)</button>
+<button class="initiative-role-filter px-2.5 py-1 rounded-lg text-label-sm font-label-sm border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium" onclick="filterInitiatives('dev')">Dev (4)</button>
+<button class="initiative-role-filter px-2.5 py-1 rounded-lg text-label-sm font-label-sm border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium" onclick="filterInitiatives('qa')">QA (2)</button>
+<button class="initiative-role-filter px-2.5 py-1 rounded-lg text-label-sm font-label-sm border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium" onclick="filterInitiatives('po')">PO (1)</button>
+<button class="initiative-role-filter px-2.5 py-1 rounded-lg text-label-sm font-label-sm border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium" onclick="filterInitiatives('devops')">DevOps (1)</button>
+</div>
+<!-- Right: Duration Filters & Search Input -->
+<div class="flex items-center space-x-2">
+<div class="hidden sm:flex items-center space-x-1 border border-slate-200 rounded-lg p-0.5 bg-slate-50 text-label-xs font-label-xs">
+<span class="px-2 py-1 bg-white shadow-xs rounded font-bold text-slate-900">Tous (8)</span>
+<span class="px-2 py-1 text-slate-600 cursor-pointer hover:text-slate-900">Flash &lt;3j</span>
+<span class="px-2 py-1 text-slate-600 cursor-pointer hover:text-slate-900">Sprint 1-2 sem</span>
+<span class="px-2 py-1 text-slate-600 cursor-pointer hover:text-slate-900">Stratégique &gt;2 sem</span>
+</div>
+<div class="relative w-full sm:w-60">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-slate-400 text-[16px]">search</span>
+<input class="w-full pl-8 pr-3 py-1.5 text-body-sm font-body-sm rounded-lg border border-slate-200 focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" placeholder="Rechercher sujet ou techno..." type="text"/>
+</div>
+</div>
+</div>
+<!-- Bento / Responsive Grid of Pre-Approved Initiatives -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter-desktop">
+<!-- Card 1 (Dev) -->
+<div class="initiative-card card-shell rounded-xl p-space-lg flex flex-col justify-between transition-all" data-role="dev">
+<div class="space-y-space-sm">
+<div class="flex items-start justify-between gap-2">
+<span class="px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">check</span>
+<span>Pré-validé par Manager</span>
+</span>
+<span class="px-2 py-0.5 rounded text-label-xs font-label-xs bg-indigo-50 text-indigo-700 font-semibold">
+                Sprint 1-2 sem
+              </span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-slate-900 font-bold leading-snug">
+              Migration du Starter Kit Next.js 14 &amp; Tailwind v4
+            </h3>
+<p class="text-body-sm font-body-sm text-slate-600">
+              Modernisation du template interne réutilisé sur les démarrages de projets clients. Documentation, benchmarks et composants réutilisables.
+            </p>
+<div class="flex flex-wrap gap-1.5 pt-2">
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">React</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Next.js</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">TypeScript</span>
+</div>
+</div>
+<div class="pt-space-lg border-t border-slate-100 mt-space-md flex items-center justify-between">
+<div class="text-[11px] text-slate-500">
+              Impact : <strong class="text-slate-800">Cadrage Tech</strong>
+</div>
+<button class="px-3.5 py-1.5 rounded-lg bg-primary-container text-white text-label-sm font-label-sm hover:bg-indigo-700 active:scale-[0.98] transition-all flex items-center space-x-1.5 shadow-xs font-bold" onclick="claimInitiative('Migration Starter Kit Next.js')">
+<span>⚡ Je prends ce sujet</span>
+</button>
+</div>
+</div>
+<!-- Card 2 (QA) -->
+<div class="initiative-card card-shell rounded-xl p-space-lg flex flex-col justify-between transition-all" data-role="qa">
+<div class="space-y-space-sm">
+<div class="flex items-start justify-between gap-2">
+<span class="px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">check</span>
+<span>Pré-validé par Manager</span>
+</span>
+<span class="px-2 py-0.5 rounded text-label-xs font-label-xs bg-amber-50 text-amber-700 font-semibold">
+                Flash &lt;3j
+              </span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-slate-900 font-bold leading-snug">
+              Suite de tests E2E automatisés Playwright pour la plateforme Core
+            </h3>
+<p class="text-body-sm font-body-sm text-slate-600">
+              Mise en place des tests de non-régression critiques sur les flux d'authentification et de facturation avec exécution sur runner GitHub Actions.
+            </p>
+<div class="flex flex-wrap gap-1.5 pt-2">
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Playwright</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">CI/CD GitHub</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">TypeScript</span>
+</div>
+</div>
+<div class="pt-space-lg border-t border-slate-100 mt-space-md flex items-center justify-between">
+<div class="text-[11px] text-slate-500">
+              Impact : <strong class="text-slate-800">Fiabilité Core</strong>
+</div>
+<button class="px-3.5 py-1.5 rounded-lg bg-primary-container text-white text-label-sm font-label-sm hover:bg-indigo-700 active:scale-[0.98] transition-all flex items-center space-x-1.5 shadow-xs font-bold" onclick="claimInitiative('Tests E2E Playwright Core')">
+<span>⚡ Je prends ce sujet</span>
+</button>
+</div>
+</div>
+<!-- Card 3 (DevOps) -->
+<div class="initiative-card card-shell rounded-xl p-space-lg flex flex-col justify-between transition-all" data-role="devops">
+<div class="space-y-space-sm">
+<div class="flex items-start justify-between gap-2">
+<span class="px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">check</span>
+<span>Pré-validé par Manager</span>
+</span>
+<span class="px-2 py-0.5 rounded text-label-xs font-label-xs bg-indigo-50 text-indigo-700 font-semibold">
+                Sprint 1-2 sem
+              </span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-slate-900 font-bold leading-snug">
+              Refonte de la Pipeline Terraform &amp; Observabilité Datadog
+            </h3>
+<p class="text-body-sm font-body-sm text-slate-600">
+              Standardisation des modules IaC réutilisables et création d'un template de dashboards Datadog standardisé pour nos environnements clients.
+            </p>
+<div class="flex flex-wrap gap-1.5 pt-2">
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Terraform</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">AWS</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Datadog</span>
+</div>
+</div>
+<div class="pt-space-lg border-t border-slate-100 mt-space-md flex items-center justify-between">
+<div class="text-[11px] text-slate-500">
+              Impact : <strong class="text-slate-800">Ops Excellence</strong>
+</div>
+<button class="px-3.5 py-1.5 rounded-lg bg-primary-container text-white text-label-sm font-label-sm hover:bg-indigo-700 active:scale-[0.98] transition-all flex items-center space-x-1.5 shadow-xs font-bold" onclick="claimInitiative('Pipeline Terraform &amp; Datadog')">
+<span>⚡ Je prends ce sujet</span>
+</button>
+</div>
+</div>
+<!-- Card 4 (PO) -->
+<div class="initiative-card card-shell rounded-xl p-space-lg flex flex-col justify-between transition-all" data-role="po">
+<div class="space-y-space-sm">
+<div class="flex items-start justify-between gap-2">
+<span class="px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">check</span>
+<span>Pré-validé par Manager</span>
+</span>
+<span class="px-2 py-0.5 rounded text-label-xs font-label-xs bg-purple-50 text-purple-700 font-semibold">
+                Stratégique &gt;2 sem
+              </span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-slate-900 font-bold leading-snug">
+              Framework d'évaluation IA &amp; Prompt Engineering pour POs
+            </h3>
+<p class="text-body-sm font-body-sm text-slate-600">
+              Création d'un playbook d'accélération cadrage produit assisté par IA (User stories génératives, découpage de backlog, synthèses d'interviews).
+            </p>
+<div class="flex flex-wrap gap-1.5 pt-2">
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">LLM APIs</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">LangChain</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">ProductOps</span>
+</div>
+</div>
+<div class="pt-space-lg border-t border-slate-100 mt-space-md flex items-center justify-between">
+<div class="text-[11px] text-slate-500">
+              Impact : <strong class="text-slate-800">IA Practice</strong>
+</div>
+<button class="px-3.5 py-1.5 rounded-lg bg-primary-container text-white text-label-sm font-label-sm hover:bg-indigo-700 active:scale-[0.98] transition-all flex items-center space-x-1.5 shadow-xs font-bold" onclick="claimInitiative('Framework IA pour POs')">
+<span>⚡ Je prends ce sujet</span>
+</button>
+</div>
+</div>
+<!-- Card 5 (Dev) -->
+<div class="initiative-card card-shell rounded-xl p-space-lg flex flex-col justify-between transition-all" data-role="dev">
+<div class="space-y-space-sm">
+<div class="flex items-start justify-between gap-2">
+<span class="px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">check</span>
+<span>Pré-validé par Manager</span>
+</span>
+<span class="px-2 py-0.5 rounded text-label-xs font-label-xs bg-amber-50 text-amber-700 font-semibold">
+                Flash &lt;3j
+              </span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-slate-900 font-bold leading-snug">
+              Boîte à outils Design System UI Tokens
+            </h3>
+<p class="text-body-sm font-body-sm text-slate-600">
+              Audit des composants React et publication du package NPM versionné avec export synchronisé des styles Figma Tokens vers Tailwind CSS.
+            </p>
+<div class="flex flex-wrap gap-1.5 pt-2">
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Figma Tokens</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">CSS Variables</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Storybook</span>
+</div>
+</div>
+<div class="pt-space-lg border-t border-slate-100 mt-space-md flex items-center justify-between">
+<div class="text-[11px] text-slate-500">
+              Impact : <strong class="text-slate-800">Frontend Asset</strong>
+</div>
+<button class="px-3.5 py-1.5 rounded-lg bg-primary-container text-white text-label-sm font-label-sm hover:bg-indigo-700 active:scale-[0.98] transition-all flex items-center space-x-1.5 shadow-xs font-bold" onclick="claimInitiative('Boîte à outils Design System')">
+<span>⚡ Je prends ce sujet</span>
+</button>
+</div>
+</div>
+<!-- Card 6 (Dev / QA / Sec) -->
+<div class="initiative-card card-shell rounded-xl p-space-lg flex flex-col justify-between transition-all" data-role="qa">
+<div class="space-y-space-sm">
+<div class="flex items-start justify-between gap-2">
+<span class="px-2 py-0.5 rounded-full text-label-xs font-label-xs bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">check</span>
+<span>Pré-validé par Manager</span>
+</span>
+<span class="px-2 py-0.5 rounded text-label-xs font-label-xs bg-purple-50 text-purple-700 font-semibold">
+                Stratégique &gt;2 sem
+              </span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-slate-900 font-bold leading-snug">
+              Audit de sécurité &amp; conformité SOC2 / ISO 27001
+            </h3>
+<p class="text-body-sm font-body-sm text-slate-600">
+              Analyse des vulnérabilités des repos internes, intégration de SonarQube sur les pull requests et rédaction de la matrice d'habilitation.
+            </p>
+<div class="flex flex-wrap gap-1.5 pt-2">
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">SecOps</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">SonarQube</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 font-medium">Vault</span>
+</div>
+</div>
+<div class="pt-space-lg border-t border-slate-100 mt-space-md flex items-center justify-between">
+<div class="text-[11px] text-slate-500">
+              Impact : <strong class="text-slate-800">Securité Entreprise</strong>
+</div>
+<button class="px-3.5 py-1.5 rounded-lg bg-primary-container text-white text-label-sm font-label-sm hover:bg-indigo-700 active:scale-[0.98] transition-all flex items-center space-x-1.5 shadow-xs font-bold" onclick="claimInitiative('Audit sécurité SOC2')">
+<span>⚡ Je prends ce sujet</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- TAB 3: SUIVI & VALIDATIONS -->
+<!-- ========================================== -->
+<div class="tab-content hidden space-y-space-xl" id="tab-view-3">
+<!-- Split Screen: Idéation Collaborateur vs File d'Approbation Manager -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop">
+<!-- Left: Proposer une idée personnelle (5 Cols) -->
+<div class="lg:col-span-5 card-shell rounded-xl p-space-lg flex flex-col justify-between">
+<div>
+<div class="flex items-center space-x-2 text-primary pb-2 border-b border-slate-100">
+<span class="material-symbols-outlined text-[22px]">lightbulb</span>
+<h2 class="text-headline-sm font-headline-sm text-slate-900">Proposer une initiative spontanée</h2>
+</div>
+<p class="text-body-sm font-body-sm text-slate-600 mt-2">
+              Vous identifiez un besoin récurrent sur vos missions ou un outil interne à construire ? Soumettez votre idée pour obtenir un sponsor managérial.
+            </p>
+<form class="mt-space-md space-y-3" onsubmit="submitNewInitiative(event)">
+<div>
+<label class="block text-label-sm font-label-sm text-slate-700 mb-1">Titre du projet interne</label>
+<input class="w-full text-body-md font-body-md rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" id="init-title" placeholder="Ex: Starter Template microservices NestJS" required="" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="block text-label-sm font-label-sm text-slate-700 mb-1">Rôle cible</label>
+<select class="w-full text-body-sm font-body-sm rounded-lg border border-slate-300 px-2.5 py-2 text-slate-800 focus:border-primary-container outline-none">
+<option>Développeur</option>
+<option>QA / Testeur</option>
+<option>DevOps / Cloud</option>
+<option>Product Owner</option>
+</select>
+</div>
+<div>
+<label class="block text-label-sm font-label-sm text-slate-700 mb-1">Durée estimée</label>
+<select class="w-full text-body-sm font-body-sm rounded-lg border border-slate-300 px-2.5 py-2 text-slate-800 focus:border-primary-container outline-none">
+<option>&lt; 3 jours (Flash)</option>
+<option>1 à 2 semaines</option>
+<option>&gt; 2 semaines</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block text-label-sm font-label-sm text-slate-700 mb-1">Description &amp; Valeur ajoutée pour l'agence</label>
+<textarea class="w-full text-body-sm font-body-sm rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" id="init-desc" placeholder="Quel problème résout cette initiative ? Quels gains de productivité pour les futures missions ?" required="" rows="3"></textarea>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-label-md font-label-md font-bold transition-all shadow-xs flex items-center justify-center space-x-1.5 mt-2" type="submit">
+<span class="material-symbols-outlined text-[18px]">send</span>
+<span>+ Soumettre pour validation</span>
+</button>
+</form>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex items-center space-x-1">
+<span class="material-symbols-outlined text-emerald-600 text-[15px]">verified</span>
+<span>Les propositions validées ouvrent droit au programme de prime d'initiative interne.</span>
+</div>
+</div>
+<!-- Right: File d'approbation Manager (7 Cols) -->
+<div class="lg:col-span-7 space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-amber-600 text-[22px]">pending_actions</span>
+<h2 class="text-headline-sm font-headline-sm text-slate-900">File d'approbation Manager</h2>
+</div>
+<span class="px-2.5 py-0.5 rounded-full text-label-xs font-label-xs bg-amber-50 text-amber-800 border border-amber-200 font-bold">2 demandes en attente</span>
+</div>
+<!-- Pending Card 1 -->
+<div class="card-shell rounded-xl p-space-lg flex flex-col justify-between border-l-4 border-l-primary-container" id="approval-card-1">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center space-x-2">
+<div class="w-7 h-7 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center">SB</div>
+<div>
+<span class="font-semibold text-slate-900 text-label-md font-label-md">Sara Benali</span>
+<span class="text-xs text-slate-500">• Dev Backend (Intercontrat)</span>
+</div>
+</div>
+<span class="text-label-xs font-label-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Estimé : 4 jours</span>
+</div>
+<h4 class="text-headline-sm font-headline-sm text-slate-900 font-bold mt-2">
+                Générateur automatique de documentation API via OpenAPI
+              </h4>
+<p class="text-body-sm font-body-sm text-slate-600 mt-1">
+                Génération de SDKs TypeScript typés et de specs Swagger interactives directement à partir de nos schémas backend. Gain estimé : 2j par projet client.
+              </p>
+</div>
+<div class="flex items-center justify-end space-x-2.5 pt-3 mt-3 border-t border-slate-100">
+<button class="px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 text-label-sm font-label-sm font-medium flex items-center space-x-1" onclick="triggerToast('Discussion Slack ouverte avec Sara Benali')">
+<span class="material-symbols-outlined text-[16px]">forum</span>
+<span>💬 Échanger</span>
+</button>
+<button class="px-4 py-1.5 rounded-lg bg-primary-container hover:bg-indigo-700 text-white text-label-sm font-label-sm font-bold flex items-center space-x-1 shadow-xs" onclick="approveInitiative('approval-card-1', 'Générateur OpenAPI')">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span>✓ Valider l'initiative</span>
+</button>
+</div>
+</div>
+<!-- Pending Card 2 -->
+<div class="card-shell rounded-xl p-space-lg flex flex-col justify-between border-l-4 border-l-amber-500" id="approval-card-2">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center space-x-2">
+<div class="w-7 h-7 rounded-full bg-amber-600 text-white font-bold text-xs flex items-center justify-center">AK</div>
+<div>
+<span class="font-semibold text-slate-900 text-label-md font-label-md">Ahmed Kabbaj</span>
+<span class="text-xs text-slate-500">• QA Lead (Fin dans 11j)</span>
+</div>
+</div>
+<span class="text-label-xs font-label-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Estimé : 2 jours</span>
+</div>
+<h4 class="text-headline-sm font-headline-sm text-slate-900 font-bold mt-2">
+                Benchmarking des outils de QA visuelle (Percy vs Applitools)
+              </h4>
+<p class="text-body-sm font-body-sm text-slate-600 mt-1">
+                Étude comparative des coûts, de la détection des régressions CSS et publication d'une matrice de décision pour nos consultants QA.
+              </p>
+</div>
+<div class="flex items-center justify-end space-x-2.5 pt-3 mt-3 border-t border-slate-100">
+<button class="px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 text-label-sm font-label-sm font-medium flex items-center space-x-1" onclick="triggerToast('Discussion Slack ouverte avec Ahmed Kabbaj')">
+<span class="material-symbols-outlined text-[16px]">forum</span>
+<span>💬 Échanger</span>
+</button>
+<button class="px-4 py-1.5 rounded-lg bg-primary-container hover:bg-indigo-700 text-white text-label-sm font-label-sm font-bold flex items-center space-x-1 shadow-xs" onclick="approveInitiative('approval-card-2', 'Benchmark QA Visuelle')">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span>✓ Valider l'initiative</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Section: Projets en cours & Livrables -->
+<div class="card-shell rounded-xl overflow-hidden mt-space-xl">
+<div class="px-space-lg py-3.5 bg-white border-b border-slate-100 flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-indigo-600">rocket_launch</span>
+<h3 class="text-headline-sm font-headline-sm text-slate-900 font-bold">Initiatives en Cours &amp; Livrables Attendus</h3>
+</div>
+<span class="text-label-xs font-label-xs text-slate-500 uppercase tracking-wider">2 projets en phase de finalisation</span>
+</div>
+<div class="p-space-lg space-y-4">
+<!-- Project Row 1 -->
+<div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4" id="ongoing-1">
+<div class="space-y-1 max-w-xl">
+<div class="flex items-center space-x-2">
+<span class="font-bold text-slate-900 text-body-lg font-body-lg">Refonte du socle Kubernetes Staging</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-indigo-100 text-indigo-800 font-bold">DevOps</span>
+</div>
+<div class="text-body-sm font-body-sm text-slate-600">
+                Assigné à : <strong class="text-slate-900">Nicolas B. (DevOps)</strong> • Échéance : Demain 17h00
+              </div>
+<!-- Progress bar -->
+<div class="flex items-center space-x-3 pt-1">
+<div class="w-48 bg-slate-200 h-2 rounded-full overflow-hidden">
+<div class="bg-indigo-600 h-full rounded-full" style="width: 85%"></div>
+</div>
+<span class="text-label-xs font-label-xs font-bold text-indigo-700">85% Avancement</span>
+</div>
+</div>
+<div class="flex items-center space-x-2 w-full md:w-auto justify-end">
+<button class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-label-sm font-label-sm font-bold flex items-center space-x-1.5 shadow-xs transition-colors" onclick="promptDeliveryUrl('Refonte socle Kubernetes', 'ongoing-1')">
+<span class="material-symbols-outlined text-[16px]">task_alt</span>
+<span>✓ Marquer terminé &amp; Déposer livrable</span>
+</button>
+</div>
+</div>
+<!-- Project Row 2 -->
+<div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4" id="ongoing-2">
+<div class="space-y-1 max-w-xl">
+<div class="flex items-center space-x-2">
+<span class="font-bold text-slate-900 text-body-lg font-body-lg">Catalogue de composants accessibles WCAG AA</span>
+<span class="px-2 py-0.5 rounded text-[11px] bg-emerald-100 text-emerald-800 font-bold">Frontend</span>
+</div>
+<div class="text-body-sm font-body-sm text-slate-600">
+                Assigné à : <strong class="text-slate-900">Marc D. (Lead Dev)</strong> • Échéance : 4 jours restants
+              </div>
+<!-- Progress bar -->
+<div class="flex items-center space-x-3 pt-1">
+<div class="w-48 bg-slate-200 h-2 rounded-full overflow-hidden">
+<div class="bg-indigo-600 h-full rounded-full" style="width: 50%"></div>
+</div>
+<span class="text-label-xs font-label-xs font-bold text-indigo-700">50% Avancement</span>
+</div>
+</div>
+<div class="flex items-center space-x-2 w-full md:w-auto justify-end">
+<button class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-label-sm font-label-sm font-bold flex items-center space-x-1.5 shadow-xs transition-colors" onclick="promptDeliveryUrl('Catalogue WCAG AA', 'ongoing-2')">
+<span class="material-symbols-outlined text-[16px]">task_alt</span>
+<span>✓ Marquer terminé &amp; Déposer livrable</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- JAVASCRIPT LOGIC -->
+<script>
+    // Tab switching logic
+    function switchTab(tabId) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      
+      // Reset navigation classes
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-primary', 'border-primary', 'font-semibold');
+        btn.classList.add('text-secondary', 'border-transparent', 'font-medium');
+      });
+
+      // Show selected tab
+      const activeContent = document.getElementById(tabId.replace('tab-', 'tab-view-'));
+      if (activeContent) {
+        activeContent.classList.remove('hidden');
+      }
+
+      // Highlight active nav tab
+      const activeNav = document.getElementById('nav-' + tabId);
+      if (activeNav) {
+        activeNav.classList.add('text-primary', 'border-primary', 'font-semibold');
+        activeNav.classList.remove('text-secondary', 'border-transparent', 'font-medium');
+      }
+    }
+
+    // Persona Dropdown toggle
+    function togglePersonaDropdown() {
+      const dropdown = document.getElementById('persona-dropdown');
+      dropdown.classList.toggle('hidden');
+    }
+
+    // Select Persona
+    function selectPersona(name, initials, colorClass) {
+      document.getElementById('active-persona-label').textContent = name;
+      togglePersonaDropdown();
+      triggerToast('Connecté avec succès sous le persona : ' + name);
+    }
+
+    // Propose an initiative to a specific consultant
+    function proposeInitiative(consultantName) {
+      switchTab('tab-2');
+      triggerToast('Catalogue ouvert pour assignation à ' + consultantName);
+    }
+
+    // Claim / Take an initiative
+    function claimInitiative(initiativeName) {
+      triggerToast('Sujet réservé : "' + initiativeName + '". Notifié au manager !');
+    }
+
+    // Manager approves an initiative
+    function approveInitiative(cardId, initiativeName) {
+      const card = document.getElementById(cardId);
+      if (card) {
+        card.style.opacity = '0.4';
+        card.style.pointerEvents = 'none';
+      }
+      triggerToast('✓ Initiative approuvée : ' + initiativeName);
+    }
+
+    // Submit user initiative from form
+    function submitNewInitiative(e) {
+      e.preventDefault();
+      const title = document.getElementById('init-title').value;
+      document.getElementById('init-title').value = '';
+      document.getElementById('init-desc').value = '';
+      triggerToast('Proposition soumise : "' + title + '" en attente de revue');
+    }
+
+    // Deliverable completion prompt
+    function promptDeliveryUrl(projectName, elementId) {
+      const url = prompt('Veuillez renseigner le lien du livrable final (GitHub PR, Notion doc ou démo) :', 'https://github.com/internal/starter-kit/pull/42');
+      if (url) {
+        const row = document.getElementById(elementId);
+        if (row) {
+          row.classList.remove('bg-slate-50/50');
+          row.classList.add('bg-emerald-50/60', 'border-emerald-200');
+          row.innerHTML = `
+            <div class="flex items-center space-x-2 text-emerald-800 font-bold py-1">
+              <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+              <span>Projet finalisé avec succès ! Livrable vérifié : <a href="#" class="underline text-indigo-700 ml-1">${url}</a></span>
+            </div>
+            <span class="px-2 py-0.5 rounded text-xs bg-emerald-200 text-emerald-900 font-semibold">Archivé / Validé</span>
+          `;
+        }
+        triggerToast('Projet clôturé et archivé avec succès !');
+      }
+    }
+
+    // Filter Initiatives in Tab 2
+    function filterInitiatives(role) {
+      // Button states
+      document.querySelectorAll('.initiative-role-filter').forEach(btn => {
+        btn.classList.remove('bg-slate-900', 'text-white');
+        btn.classList.add('border', 'border-slate-200', 'text-slate-600');
+      });
+      event.target.classList.add('bg-slate-900', 'text-white');
+      event.target.classList.remove('border', 'border-slate-200', 'text-slate-600');
+
+      // Cards visibility
+      const cards = document.querySelectorAll('.initiative-card');
+      cards.forEach(card => {
+        if (role === 'all' || card.getAttribute('data-role') === role) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Toast Feedback popup
+    function triggerToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      toastMessage.textContent = message;
+      
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3200);
+    }
+
+    // Close persona dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+      const dropdown = document.getElementById('persona-dropdown');
+      const button = dropdown?.previousElementSibling;
+      if (dropdown && !dropdown.contains(e.target) && !button?.contains(e.target)) {
+        dropdown.classList.add('hidden');
+      }
+    });
+  </script>
+</body></html>
