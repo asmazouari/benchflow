@@ -1,0 +1,125 @@
+{
+  "id": "benchflow",
+  "realm": "benchflow",
+  "displayName": "BenchFlow Talent Hub",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "rememberMe": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "manager",
+        "description": "Responsable de staffing / validation"
+      },
+      {
+        "name": "collaborateur",
+        "description": "Consultant en mission ou inter-projet"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "benchflow-app",
+      "name": "BenchFlow Web Application",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "rootUrl": "http://localhost:3000",
+      "baseUrl": "http://localhost:3000",
+      "redirectUris": [
+        "http://localhost:3000/*",
+        "http://localhost:3000/api/auth/callback/keycloak"
+      ],
+      "webOrigins": [
+        "http://localhost:3000",
+        "+"
+      ],
+      "attributes": {
+        "access.token.lifespan": "3600"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "thomas.laurent@benchflow.tech",
+      "email": "thomas.laurent@benchflow.tech",
+      "firstName": "Thomas",
+      "lastName": "Laurent",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "manager"
+      ],
+      "attributes": {
+        "role": [
+          "manager"
+        ]
+      }
+    },
+    {
+      "username": "sara.benali@benchflow.tech",
+      "email": "sara.benali@benchflow.tech",
+      "firstName": "Sara",
+      "lastName": "Ben Ali",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "collaborateur"
+      ],
+      "attributes": {
+        "role": [
+          "collaborateur"
+        ],
+        "metier": [
+          "Dev"
+        ]
+      }
+    },
+    {
+      "username": "ahmed.kacem@benchflow.tech",
+      "email": "ahmed.kacem@benchflow.tech",
+      "firstName": "Ahmed",
+      "lastName": "Kacem",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "collaborateur"
+      ],
+      "attributes": {
+        "role": [
+          "collaborateur"
+        ],
+        "metier": [
+          "QA"
+        ]
+      }
+    }
+  ]
+}
