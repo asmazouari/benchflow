@@ -14,13 +14,11 @@ export function Card({
   className = '',
   ...props
 }: CardProps) {
-  const hoverStyles = hoverEffect
-    ? 'hover:shadow-md hover:border-slate-300 transition-all duration-200'
-    : '';
+  const baseClasses = hoverEffect ? 'card-shell' : 'bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-5';
 
   return (
     <div
-      className={`bg-white rounded-xl border border-slate-200 shadow-xs p-5 ${hoverStyles} ${className}`}
+      className={`${baseClasses} ${hoverEffect ? 'p-5' : ''} ${className}`}
       {...props}
     >
       {children}
