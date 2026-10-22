@@ -97,13 +97,13 @@ export function ValidationTab({
         </div>
 
         {pendingList.length === 0 ? (
-          <Card className="text-center py-8 bg-slate-50 border-dashed">
+          <div className="card-shell text-center py-10 bg-slate-50/50 border-dashed">
             <p className="text-xs text-slate-500 font-medium">Aucune proposition en attente de validation.</p>
-          </Card>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {pendingList.map((item) => (
-              <Card key={item.id} className="border-l-4 border-l-amber-400 space-y-3">
+              <div key={item.id} className="card-shell p-5 space-y-3 hover:border-amber-300">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
                     <Badge variant="metier" metier={item.metier}>
@@ -119,12 +119,12 @@ export function ValidationTab({
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-slate-900 text-base">{item.titre}</h3>
-                  <p className="text-xs text-slate-600 mt-1">{item.description}</p>
+                  <h3 className="font-bold text-slate-900 text-base leading-snug">{item.titre}</h3>
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">{item.description}</p>
                 </div>
 
                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-slate-400 font-medium">
                     Proposé par <strong className="text-slate-700">{item.auteurNom}</strong>
                   </span>
 
@@ -153,7 +153,7 @@ export function ValidationTab({
                     </span>
                   )}
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}
@@ -166,13 +166,13 @@ export function ValidationTab({
         </h2>
 
         {inProgressList.length === 0 ? (
-          <Card className="text-center py-8 bg-slate-50 border-dashed">
-            <p className="text-xs text-slate-500 font-medium">Aucun projet en cours pour l instant.</p>
-          </Card>
+          <div className="card-shell text-center py-10 bg-slate-50/50 border-dashed">
+            <p className="text-xs text-slate-500 font-medium">Aucun projet en cours pour l&apos;instant.</p>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {inProgressList.map((item) => (
-              <Card key={item.id} className="border-l-4 border-l-indigo-600 space-y-3">
+              <div key={item.id} className="card-shell p-5 space-y-3 hover:border-indigo-300">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
                     <Badge variant="metier" metier={item.metier}>
@@ -182,18 +182,18 @@ export function ValidationTab({
                       En cours
                     </Badge>
                   </div>
-                  <span className="text-xs font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">
-                    Assigné à {item.assigneNom || 'Non assigné'}
+                  <span className="text-[11px] font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-full">
+                    Assigné : {item.assigneNom || 'Non assigné'}
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-slate-900 text-base">{item.titre}</h3>
-                  <p className="text-xs text-slate-600 mt-1">{item.description}</p>
+                  <h3 className="font-bold text-slate-900 text-base leading-snug">{item.titre}</h3>
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">{item.description}</p>
                 </div>
 
                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-xs text-slate-400">Démarré le {item.dateCreation}</span>
+                  <span className="text-xs text-slate-400 font-medium">Démarré le {item.dateCreation}</span>
 
                   <Button
                     size="sm"
@@ -204,7 +204,7 @@ export function ValidationTab({
                     Marquer terminé
                   </Button>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}
@@ -218,32 +218,32 @@ export function ValidationTab({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {completedList.map((item) => (
-            <Card key={item.id} className="bg-slate-50 border-slate-200 space-y-2">
+            <div key={item.id} className="card-shell p-5 space-y-2.5 bg-slate-50/50">
               <div className="flex items-center justify-between">
                 <Badge variant="metier" metier={item.metier}>
                   {item.metier}
                 </Badge>
-                <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                  ✓ Terminé avec succès
+                <span className="text-[11px] font-bold badge-pastel-emerald px-2 py-0.5 rounded-full">
+                  ✓ Livré
                 </span>
               </div>
 
-              <h4 className="font-bold text-slate-900 text-sm">{item.titre}</h4>
-              <p className="text-xs text-slate-500">Par {item.assigneNom}</p>
+              <h4 className="font-bold text-slate-900 text-sm leading-snug">{item.titre}</h4>
+              <p className="text-xs text-slate-500 font-medium">Par {item.assigneNom}</p>
 
               {item.livrableUrl && (
-                <div className="pt-2 border-t border-slate-200">
+                <div className="pt-2.5 border-t border-slate-200/80">
                   <a
                     href={item.livrableUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 font-semibold"
+                    className="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 font-semibold transition-colors"
                   >
                     <ExternalLink className="w-3.5 h-3.5" /> Voir le livrable
                   </a>
                 </div>
               )}
-            </Card>
+            </div>
           ))}
         </div>
       </div>
