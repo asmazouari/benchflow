@@ -6,6 +6,7 @@ import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Check, X, Send, Award, ExternalLink, Sparkles, MessageSquare } from 'lucide-react';
+import { AiSuggestionModal } from '../ui/AiSuggestionModal';
 
 interface ValidationTabProps {
   initiatives: Initiative[];
@@ -25,6 +26,7 @@ export function ValidationTab({
   onCompleteInitiative,
 }: ValidationTabProps) {
   const [showProposeModal, setShowProposeModal] = useState(false);
+  const [showAiModal, setShowAiModal] = useState(false);
   const [titre, setTitre] = useState('');
   const [desc, setDesc] = useState('');
   const [metier, setMetier] = useState<Metier>(currentUser.metier || 'Dev');
@@ -54,6 +56,19 @@ export function ValidationTab({
     setShowProposeModal(false);
   };
 
+  const handleAdoptAiInitiative = (init: {
+    titre: string;
+    description: string;
+    metier: Metier;
+    duree: Duree;
+  }) => {
+    onProposeIdea({
+      ...init,
+      auteurNom: `${currentUser.nom} (IA Ollama)`,
+      assigneNom: currentUser.nom,
+    });
+  };
+
   const handleCompleteSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (completingId && livrableUrl) {
@@ -74,13 +89,23 @@ export function ValidationTab({
           </p>
         </div>
 
-        <Button
-          onClick={() => setShowProposeModal(true)}
-          icon={<Send className="w-4 h-4" />}
-          variant="ai"
-        >
-          Proposer mon idée
-        </Button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowAiModal(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100/80 border border-indigo-200 shadow-2xs transition-all cursor-pointer active:scale-[0.98]"
+          >
+            <Sparkles className="w-4 h-4 text-indigo-600" />
+            <span>Suggérer avec l&apos;IA</span>
+          </button>
+
+          <Button
+            onClick={() => setShowProposeModal(true)}
+            icon={<Send className="w-4 h-4" />}
+            variant="ai"
+          >
+            Proposer mon idée
+          </Button>
+        </div>
       </div>
 
       {/* 1. Manager Queue: Ideas to Validate */}
@@ -366,6 +391,15 @@ export function ValidationTab({
           </div>
         </div>
       )}
+
+      {/* Modal: Suggestion IA (Ollama) */}
+      <AiSuggestionModal
+        isOpen={showAiModal}
+        onClose={() => setShowAiModal(false)}
+        defaultMetier={currentUser.metier || 'Dev'}
+        onAdoptInitiative={handleAdoptAiInitiative}
+        isManager={currentUser.role === 'manager'}
+      />
     </div>
   );
 }

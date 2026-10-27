@@ -42,3 +42,17 @@ export interface UserProfile {
   metier?: Metier;
   roles?: string[];
 }
+
+export interface AiSuggestedInitiative {
+  titre: string;
+  description: string;
+  metier: Metier;
+  duree: Duree;
+  livrableAttendu: string;
+}
+
+export interface AiSuggestionResponse {
+  metier: Metier;
+  source: 'ollama_local' | 'cloud_resilient';
+  suggestions: AiSuggestedInitiative[];
+}
