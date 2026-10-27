@@ -6,12 +6,14 @@ import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Plus, Check, Clock, UserCheck, ShieldCheck, Sparkles, Filter } from 'lucide-react';
+import { AiSuggestionModal } from '../ui/AiSuggestionModal';
 
 interface CatalogTabProps {
   initiatives: Initiative[];
   currentUser: UserProfile;
   onTakeInitiative: (id: number) => void;
   onAddInitiative: (init: Omit<Initiative, 'id' | 'dateCreation' | 'statut' | 'origine'>) => void;
+  onProposeIdea?: (idea: Omit<Initiative, 'id' | 'dateCreation' | 'statut' | 'origine'>) => void;
 }
 
 export function CatalogTab({
@@ -19,10 +21,12 @@ export function CatalogTab({
   currentUser,
   onTakeInitiative,
   onAddInitiative,
+  onProposeIdea,
 }: CatalogTabProps) {
   const [selectedMetier, setSelectedMetier] = useState<Metier>('Tous');
   const [selectedDuree, setSelectedDuree] = useState<string>('Tous');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showAiModal, setShowAiModal] = useState(false);
 
   const [newTitre, setNewTitre] = useState('');
   const [newDesc, setNewDesc] = useState('');
@@ -56,6 +60,31 @@ export function CatalogTab({
     setShowAddModal(false);
   };
 
+  const handleAdoptAiInitiative = (init: {
+    titre: string;
+    description: string;
+    metier: Metier;
+    duree: Duree;
+  }) => {
+    if (currentUser.role === 'manager') {
+      onAddInitiative({
+        ...init,
+        auteurNom: `${currentUser.nom} (Manager - IA Ollama)`,
+      });
+    } else if (onProposeIdea) {
+      onProposeIdea({
+        ...init,
+        auteurNom: `${currentUser.nom} (IA Ollama)`,
+        assigneNom: currentUser.nom,
+      });
+    } else {
+      onAddInitiative({
+        ...init,
+        auteurNom: `${currentUser.nom} (IA Ollama)`,
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -72,15 +101,25 @@ export function CatalogTab({
           </p>
         </div>
 
-        {currentUser.role === 'manager' && (
-          <Button
-            onClick={() => setShowAddModal(true)}
-            icon={<Plus className="w-4 h-4" />}
-            variant="primary"
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowAiModal(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100/80 border border-indigo-200 shadow-2xs transition-all cursor-pointer active:scale-[0.98]"
           >
-            Déposer une initiative
-          </Button>
-        )}
+            <Sparkles className="w-4 h-4 text-indigo-600" />
+            <span>Suggérer avec l&apos;IA</span>
+          </button>
+
+          {currentUser.role === 'manager' && (
+            <Button
+              onClick={() => setShowAddModal(true)}
+              icon={<Plus className="w-4 h-4" />}
+              variant="primary"
+            >
+              Déposer une initiative
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Filter Bars */}
@@ -286,6 +325,15 @@ export function CatalogTab({
           </div>
         </div>
       )}
+
+      {/* Modal: Suggestion IA (Ollama) */}
+      <AiSuggestionModal
+        isOpen={showAiModal}
+        onClose={() => setShowAiModal(false)}
+        defaultMetier={currentUser.metier || 'Dev'}
+        onAdoptInitiative={handleAdoptAiInitiative}
+        isManager={currentUser.role === 'manager'}
+      />
     </div>
   );
 }

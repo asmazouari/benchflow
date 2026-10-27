@@ -23,3 +23,5 @@ frontend/out/
 Thumbs.db
 .vscode/
 .idea/
+.chrome-profile/
+.chrome-timesheet-profile/

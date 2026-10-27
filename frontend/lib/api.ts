@@ -1,4 +1,4 @@
-import { Collaborateur, Initiative, UserProfile } from '../types';
+import { Collaborateur, Initiative, UserProfile, AiSuggestionResponse, Metier } from '../types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 const TOKEN_KEY = 'benchflow_jwt_token';
@@ -242,6 +242,24 @@ export const api = {
       body: JSON.stringify({ livrableUrl }),
     });
     if (!res.ok) await handleResponseError(res, 'Erreur complétion');
+    return res.json();
+  },
+
+  /**
+   * Génère des suggestions d'initiatives intelligentes avec l'IA (Ollama)
+   */
+  async getAiSuggestions(
+    metier: Metier = 'Dev',
+    contexte?: string
+  ): Promise<AiSuggestionResponse> {
+    const res = await fetch(`${API_BASE_URL}/ai/suggest`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ metier, contexte }),
+    });
+    if (!res.ok) {
+      await handleResponseError(res, "Erreur lors de la génération d'initiatives IA");
+    }
     return res.json();
   },
 

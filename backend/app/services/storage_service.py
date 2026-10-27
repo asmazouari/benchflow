@@ -205,7 +205,10 @@ class StorageService:
     """
 
     def __init__(self):
-        self.init_db()
+        try:
+            self.init_db()
+        except Exception as e:
+            logger.warning(f"Connexion initiale differee ({e})")
 
     def init_db(self) -> None:
         """
