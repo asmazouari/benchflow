@@ -13,6 +13,7 @@ interface CatalogTabProps {
   currentUser: UserProfile;
   onTakeInitiative: (id: number) => void;
   onAddInitiative: (init: Omit<Initiative, 'id' | 'dateCreation' | 'statut' | 'origine'>) => void;
+  onProposeIdea?: (idea: Omit<Initiative, 'id' | 'dateCreation' | 'statut' | 'origine'>) => void;
 }
 
 export function CatalogTab({
@@ -20,6 +21,7 @@ export function CatalogTab({
   currentUser,
   onTakeInitiative,
   onAddInitiative,
+  onProposeIdea,
 }: CatalogTabProps) {
   const [selectedMetier, setSelectedMetier] = useState<Metier>('Tous');
   const [selectedDuree, setSelectedDuree] = useState<string>('Tous');
@@ -64,13 +66,23 @@ export function CatalogTab({
     metier: Metier;
     duree: Duree;
   }) => {
-    onAddInitiative({
-      ...init,
-      auteurNom:
-        currentUser.role === 'manager'
-          ? `${currentUser.nom} (Manager - IA Ollama)`
-          : `${currentUser.nom} (IA Ollama)`,
-    });
+    if (currentUser.role === 'manager') {
+      onAddInitiative({
+        ...init,
+        auteurNom: `${currentUser.nom} (Manager - IA Ollama)`,
+      });
+    } else if (onProposeIdea) {
+      onProposeIdea({
+        ...init,
+        auteurNom: `${currentUser.nom} (IA Ollama)`,
+        assigneNom: currentUser.nom,
+      });
+    } else {
+      onAddInitiative({
+        ...init,
+        auteurNom: `${currentUser.nom} (IA Ollama)`,
+      });
+    }
   };
 
   return (

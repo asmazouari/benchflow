@@ -182,6 +182,7 @@ export default function Home() {
     if (isBackendLive) {
       try {
         const created = await api.createInitiative(newIdeaData, false);
+        setActiveTab('validation');
         setInitiatives((prev) => [created, ...prev]);
         return;
       } catch (e) {
@@ -190,6 +191,7 @@ export default function Home() {
     }
 
     // Fallback local
+    setActiveTab('validation');
     const newIdea: Initiative = {
       ...newIdeaData,
       id: Date.now(),
@@ -325,6 +327,7 @@ export default function Home() {
             currentUser={currentUser}
             onTakeInitiative={handleTakeInitiative}
             onAddInitiative={handleAddInitiative}
+            onProposeIdea={handleProposeIdea}
           />
         )}
 
