@@ -58,6 +58,7 @@ export function AiSuggestionModal({
       duree: item.duree,
     });
     setAdoptedIndices((prev) => [...prev, index]);
+    onClose();
   };
 
   return (
