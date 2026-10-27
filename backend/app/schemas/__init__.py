@@ -17,6 +17,11 @@ from .initiative_schema import (
     InitiativeComplete,
     InitiativeResponse,
 )
+from .ai_schema import (
+    AiSuggestionRequest,
+    AiInitiativeProposal,
+    AiSuggestionResponse,
+)
 
 __all__ = [
     "Metier",
@@ -34,4 +39,7 @@ __all__ = [
     "TakeInitiativeRequest",
     "InitiativeComplete",
     "InitiativeResponse",
+    "AiSuggestionRequest",
+    "AiInitiativeProposal",
+    "AiSuggestionResponse",
 ]

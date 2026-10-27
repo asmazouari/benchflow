@@ -7,7 +7,12 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import router_auth, router_collaborateurs, router_initiatives
+from app.api import (
+    router_auth,
+    router_collaborateurs,
+    router_initiatives,
+    router_ai,
+)
 
 # Initialisation de l'application FastAPI
 app = FastAPI(
@@ -43,6 +48,7 @@ app.add_middleware(
 app.include_router(router_auth, prefix="/api")
 app.include_router(router_collaborateurs, prefix="/api")
 app.include_router(router_initiatives, prefix="/api")
+app.include_router(router_ai, prefix="/api")
 
 
 @app.get("/", tags=["Health"])
