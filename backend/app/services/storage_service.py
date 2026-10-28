@@ -254,18 +254,6 @@ class StorageService:
 
         db: Session = SessionLocal()
         try:
-            # Migration automatique des colonnes document si table existante
-            if engine.dialect.name == "postgresql":
-                try:
-                    db.execute(text("ALTER TABLE initiatives ADD COLUMN IF NOT EXISTS document_nom VARCHAR(255);"))
-                    db.execute(text("ALTER TABLE initiatives ADD COLUMN IF NOT EXISTS document_type VARCHAR(100);"))
-                    db.execute(text("ALTER TABLE initiatives ADD COLUMN IF NOT EXISTS document_taille INTEGER;"))
-                    db.execute(text("ALTER TABLE initiatives ADD COLUMN IF NOT EXISTS document_s3_key VARCHAR(500);"))
-                    db.commit()
-                except Exception as mig_err:
-                    logger.warning(f"Note migration colonnes initiatives : {mig_err}")
-                    db.rollback()
-
             # 1. Vérification / Amorçage des initiatives
             count_initiatives = db.query(InitiativeModel).count()
             if count_initiatives == 0:
