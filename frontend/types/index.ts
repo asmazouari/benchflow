@@ -19,6 +19,15 @@ export interface Collaborateur {
   initiativeActiveId?: number;
 }
 
+export interface CollaborateurUpdatePayload {
+  nom?: string;
+  email?: string;
+  metier?: Metier;
+  dateFinStaffing?: string;
+  clientActuel?: string;
+  role?: 'collaborateur' | 'manager';
+}
+
 export interface Initiative {
   id: number;
   titre: string;
@@ -31,6 +40,16 @@ export interface Initiative {
   assigneNom?: string;
   dateCreation: string;
   livrableUrl?: string;
+  documentNom?: string;
+  documentType?: string;
+  documentTaille?: number;
+}
+
+export interface InitiativeUpdatePayload {
+  titre?: string;
+  description?: string;
+  metier?: Metier;
+  duree?: Duree;
 }
 
 export interface UserProfile {

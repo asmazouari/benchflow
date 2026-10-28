@@ -1,7 +1,13 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Collaborateur, Initiative, UserProfile } from '../types';
+import {
+  Collaborateur,
+  Initiative,
+  UserProfile,
+  CollaborateurUpdatePayload,
+  InitiativeUpdatePayload,
+} from '../types';
 import { INITIAL_COLLABORATEURS, INITIAL_INITIATIVES } from '../lib/mockData';
 import { api, authStorage, LoginResponse } from '../lib/api';
 import { Navbar } from '../components/Navbar';
@@ -89,8 +95,7 @@ export default function Home() {
   ) => {
     if (isBackendLive) {
       try {
-        const created = await api.createCollaborateur(newCollabData);
-        setCollaborateurs((prev) => [created, ...prev]);
+        await api.createCollaborateur(newCollabData);
         // Rafraîchit les compteurs du Radar
         const summary = await api.getRadarSummary();
         setCollaborateurs(summary.collaborateurs);
@@ -119,7 +124,46 @@ export default function Home() {
     setCollaborateurs((prev) => [newCollab, ...prev]);
   };
 
-  // 2. Action : Prendre une initiative disponible (1 clic)
+  // 2. Action : Mettre à jour un collaborateur existant (Manager)
+  const handleUpdateCollaborateur = async (
+    id: number,
+    data: CollaborateurUpdatePayload
+  ) => {
+    if (isBackendLive) {
+      try {
+        await api.updateCollaborateur(id, data);
+        const summary = await api.getRadarSummary();
+        setCollaborateurs(summary.collaborateurs);
+        return;
+      } catch (e: any) {
+        console.error('Erreur API updateCollaborateur :', e);
+        throw e;
+      }
+    }
+
+    // Fallback local optimiste
+    setCollaborateurs((prev) =>
+      prev.map((collab) => {
+        if (collab.id !== id) return collab;
+        const newDate = data.dateFinStaffing || collab.dateFinStaffing;
+        const diffDays = Math.ceil(
+          (new Date(newDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24)
+        );
+        let statutAlerte: Collaborateur['statutAlerte'] = 'stable';
+        if (diffDays <= 0) statutAlerte = 'intermission';
+        else if (diffDays <= 15) statutAlerte = 'urgent';
+
+        return {
+          ...collab,
+          ...data,
+          joursRestants: diffDays,
+          statutAlerte,
+        };
+      })
+    );
+  };
+
+  // 3. Action : Prendre une initiative disponible (1 clic)
   const handleTakeInitiative = async (id: number) => {
     const userNom = currentUser?.nom || 'Collaborateur';
     if (isBackendLive) {
@@ -150,7 +194,7 @@ export default function Home() {
     setActiveTab('validation');
   };
 
-  // 3. Action : Déposer une initiative pré-validée (Manager)
+  // 4. Action : Déposer une initiative pré-validée (Manager)
   const handleAddInitiative = async (
     newInitData: Omit<Initiative, 'id' | 'dateCreation' | 'statut' | 'origine'>
   ) => {
@@ -175,13 +219,21 @@ export default function Home() {
     setInitiatives((prev) => [newInit, ...prev]);
   };
 
-  // 4. Action : Proposer une initiative personnelle (Collaborateur)
+  // 5. Action : Proposer une initiative personnelle avec document cadrage (Collaborateur)
   const handleProposeIdea = async (
-    newIdeaData: Omit<Initiative, 'id' | 'dateCreation' | 'statut' | 'origine'>
+    newIdeaData: Omit<Initiative, 'id' | 'dateCreation' | 'statut' | 'origine'>,
+    file?: File | null
   ) => {
     if (isBackendLive) {
       try {
-        const created = await api.createInitiative(newIdeaData, false);
+        let created = await api.createInitiative(newIdeaData, false);
+        if (file) {
+          try {
+            created = await api.uploadInitiativeDocument(created.id, file);
+          } catch (uploadErr) {
+            console.error('Erreur upload document cadrage MinIO :', uploadErr);
+          }
+        }
         setActiveTab('validation');
         setInitiatives((prev) => [created, ...prev]);
         return;
@@ -198,11 +250,37 @@ export default function Home() {
       dateCreation: new Date().toISOString().split('T')[0],
       statut: 'A_VALIDER',
       origine: 'collaborateur',
+      documentNom: file?.name,
+      documentTaille: file?.size,
     };
     setInitiatives((prev) => [newIdea, ...prev]);
   };
 
-  // 5. Action : Valider une initiative (Manager)
+  // 6. Action : Mettre à jour une initiative existante (Manager ou Auteur)
+  const handleUpdateInitiative = async (
+    id: number,
+    data: InitiativeUpdatePayload
+  ) => {
+    if (isBackendLive) {
+      try {
+        const updated = await api.updateInitiative(id, data);
+        setInitiatives((prev) =>
+          prev.map((init) => (init.id === id ? updated : init))
+        );
+        return;
+      } catch (e: any) {
+        console.error('Erreur API updateInitiative :', e);
+        throw e;
+      }
+    }
+
+    // Fallback local
+    setInitiatives((prev) =>
+      prev.map((init) => (init.id === id ? { ...init, ...data } : init))
+    );
+  };
+
+  // 7. Action : Valider une initiative (Manager)
   const handleValidateIdea = async (id: number) => {
     if (isBackendLive) {
       try {
@@ -220,7 +298,7 @@ export default function Home() {
     );
   };
 
-  // 6. Action : Refuser une initiative (Manager)
+  // 8. Action : Refuser une initiative (Manager)
   const handleRejectIdea = async (id: number) => {
     if (isBackendLive) {
       try {
@@ -238,7 +316,7 @@ export default function Home() {
     );
   };
 
-  // 7. Action : Clôturer avec livrable
+  // 9. Action : Clôturer avec livrable
   const handleCompleteInitiative = async (id: number, livrableUrl: string) => {
     if (isBackendLive) {
       try {
@@ -318,6 +396,7 @@ export default function Home() {
             currentUser={currentUser}
             onAddCollaborateur={handleAddCollaborateur}
             onSelectCollaborateur={handleSelectCollaborateur}
+            onUpdateCollaborateur={handleUpdateCollaborateur}
           />
         )}
 
@@ -328,6 +407,7 @@ export default function Home() {
             onTakeInitiative={handleTakeInitiative}
             onAddInitiative={handleAddInitiative}
             onProposeIdea={handleProposeIdea}
+            onUpdateInitiative={handleUpdateInitiative}
           />
         )}
 
@@ -339,6 +419,7 @@ export default function Home() {
             onValidateIdea={handleValidateIdea}
             onRejectIdea={handleRejectIdea}
             onCompleteInitiative={handleCompleteInitiative}
+            onUpdateInitiative={handleUpdateInitiative}
           />
         )}
       </main>

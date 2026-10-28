@@ -1,4 +1,12 @@
-import { Collaborateur, Initiative, UserProfile, AiSuggestionResponse, Metier } from '../types';
+import {
+  Collaborateur,
+  Initiative,
+  UserProfile,
+  AiSuggestionResponse,
+  Metier,
+  CollaborateurUpdatePayload,
+  InitiativeUpdatePayload,
+} from '../types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 const TOKEN_KEY = 'benchflow_jwt_token';
@@ -153,6 +161,22 @@ export const api = {
     return res.json();
   },
 
+  /**
+   * Met à jour un collaborateur existant (Manager uniquement)
+   */
+  async updateCollaborateur(
+    id: number,
+    data: CollaborateurUpdatePayload
+  ): Promise<Collaborateur> {
+    const res = await fetch(`${API_BASE_URL}/collaborateurs/${id}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) await handleResponseError(res, 'Erreur mise à jour collaborateur');
+    return res.json();
+  },
+
   // ==========================================
   // INITIATIVES & WORKFLOW
   // ==========================================
@@ -193,6 +217,54 @@ export const api = {
     });
     if (!res.ok) await handleResponseError(res, 'Erreur création initiative');
     return res.json();
+  },
+
+  /**
+   * Met à jour une initiative existante (Manager ou auteur si en statut A_VALIDER)
+   */
+  async updateInitiative(
+    id: number,
+    data: InitiativeUpdatePayload
+  ): Promise<Initiative> {
+    const res = await fetch(`${API_BASE_URL}/initiatives/${id}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) await handleResponseError(res, 'Erreur mise à jour initiative');
+    return res.json();
+  },
+
+  /**
+   * Téléverse un document de cadrage pour une initiative (MinIO S3)
+   */
+  async uploadInitiativeDocument(
+    id: number,
+    file: File
+  ): Promise<Initiative> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const token = authStorage.getToken();
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const res = await fetch(`${API_BASE_URL}/initiatives/${id}/document`, {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+    if (!res.ok) await handleResponseError(res, 'Erreur téléversement document');
+    return res.json();
+  },
+
+  /**
+   * URL directe de téléchargement du document de cadrage d'une initiative
+   */
+  getInitiativeDocumentDownloadUrl(id: number): string {
+    return `${API_BASE_URL}/initiatives/${id}/document`;
   },
 
   /**

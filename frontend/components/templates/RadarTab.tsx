@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Collaborateur, UserProfile, Metier } from '../../types';
+import { Collaborateur, CollaborateurUpdatePayload, UserProfile, Metier } from '../../types';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import {
@@ -15,13 +15,16 @@ import {
   Search,
   Sparkles,
   ArrowUpRight,
+  Pencil,
 } from 'lucide-react';
+import { EditCollaborateurModal } from '../ui/EditCollaborateurModal';
 
 interface RadarTabProps {
   collaborateurs: Collaborateur[];
   currentUser: UserProfile;
   onAddCollaborateur: (collab: Omit<Collaborateur, 'id' | 'joursRestants' | 'statutAlerte'>) => void;
   onSelectCollaborateur: (collab: Collaborateur) => void;
+  onUpdateCollaborateur?: (id: number, data: CollaborateurUpdatePayload) => Promise<void>;
 }
 
 export function RadarTab({
@@ -29,11 +32,13 @@ export function RadarTab({
   currentUser,
   onAddCollaborateur,
   onSelectCollaborateur,
+  onUpdateCollaborateur,
 }: RadarTabProps) {
   const [selectedMetier, setSelectedMetier] = useState<Metier>('Tous');
   const [filterStatus, setFilterStatus] = useState<'all' | 'stable' | 'urgent' | 'intermission'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingCollab, setEditingCollab] = useState<Collaborateur | null>(null);
 
   // Form states
   const [newNom, setNewNom] = useState('');
@@ -224,7 +229,7 @@ export function RadarTab({
                 <th className="px-6 py-3.5">Mission Client Actuelle</th>
                 <th className="px-6 py-3.5">Date de Fin</th>
                 <th className="px-6 py-3.5">Statut d&apos;Anticipation</th>
-                <th className="px-6 py-3.5 text-right">Action</th>
+                <th className="px-6 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -286,13 +291,25 @@ export function RadarTab({
                         </Badge>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <button
-                          onClick={() => onSelectCollaborateur(collab)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 border border-transparent hover:border-indigo-200 transition-all cursor-pointer"
-                        >
-                          <span>Voir initiatives</span>
-                          <ArrowUpRight className="w-3.5 h-3.5" />
-                        </button>
+                        <div className="flex items-center justify-end gap-1.5">
+                          {currentUser.role === 'manager' && onUpdateCollaborateur && (
+                            <button
+                              onClick={() => setEditingCollab(collab)}
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all cursor-pointer"
+                              title="Modifier le profil & la mission"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                              <span className="hidden sm:inline">Modifier</span>
+                            </button>
+                          )}
+                          <button
+                            onClick={() => onSelectCollaborateur(collab)}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 border border-transparent hover:border-indigo-200 transition-all cursor-pointer"
+                          >
+                            <span>Voir initiatives</span>
+                            <ArrowUpRight className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -320,12 +337,12 @@ export function RadarTab({
             <form onSubmit={handleSubmit} className="space-y-3.5">
               <div>
                 <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Nom &amp; Prénom
+                  Nom complet
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="ex: Mehdi Zayani"
+                  placeholder="ex: Alex Dupont"
                   value={newNom}
                   onChange={(e) => setNewNom(e.target.value)}
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 outline-none"
@@ -334,12 +351,12 @@ export function RadarTab({
 
               <div>
                 <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Email professionnel
+                  Email
                 </label>
                 <input
                   type="email"
                   required
-                  placeholder="ex: mehdi.zayani@benchflow.tech"
+                  placeholder="alex.dupont@societe.com"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 outline-none"
@@ -356,16 +373,16 @@ export function RadarTab({
                     onChange={(e) => setNewMetier(e.target.value as Metier)}
                     className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 outline-none"
                   >
-                    <option value="Dev">Développeur</option>
-                    <option value="QA">Testeur QA</option>
-                    <option value="PO">Product Owner</option>
+                    <option value="Dev">Dev</option>
+                    <option value="QA">QA</option>
+                    <option value="PO">PO</option>
                     <option value="DevOps">DevOps</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Date fin de mission
+                    Fin de Staffing
                   </label>
                   <input
                     type="date"
@@ -403,6 +420,14 @@ export function RadarTab({
           </div>
         </div>
       )}
+
+      {/* Modal: Edit Collaborator */}
+      <EditCollaborateurModal
+        isOpen={!!editingCollab}
+        onClose={() => setEditingCollab(null)}
+        collaborateur={editingCollab}
+        onSave={onUpdateCollaborateur || (async () => {})}
+      />
     </div>
   );
 }
