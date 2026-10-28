@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from urllib.parse import quote
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile, status
 from app.core.keycloak_auth import UserSession, get_current_user, require_manager
 from app.schemas.initiative_schema import (
     InitiativeComplete,
     InitiativeCreate,
     InitiativeResponse,
+    InitiativeUpdate,
     TakeInitiativeRequest,
 )
 from app.services.storage_service import storage_service
@@ -47,6 +49,100 @@ def create_initiative(
     """
     effective_is_manager = (user.role == "manager") and is_manager
     return storage_service.create_initiative(initiative, is_manager=effective_is_manager)
+
+
+@router.put(
+    "/{initiative_id}",
+    response_model=InitiativeResponse,
+    summary="Modifier une initiative (Manager ou Collaborateur auteur si A_VALIDER)",
+)
+def update_initiative(
+    initiative_id: int,
+    payload: InitiativeUpdate,
+    user: UserSession = Depends(get_current_user),
+) -> InitiativeResponse:
+    """
+    Modifie les détails d'une initiative existante :
+    - Manager : modification libre de n'importe quel sujet.
+    - Collaborateur : uniquement s'il en est l'auteur et que le statut est encore 'A_VALIDER'.
+    """
+    try:
+        return storage_service.update_initiative(
+            initiative_id=initiative_id,
+            init_update=payload,
+            user_nom=user.nom,
+            is_manager=(user.role == "manager"),
+        )
+    except PermissionError as pe:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(pe))
+    except ValueError as ve:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(ve))
+
+
+@router.post(
+    "/{initiative_id}/document",
+    response_model=InitiativeResponse,
+    summary="Téléverser un document de proposition (MinIO / S3)",
+)
+async def upload_initiative_document(
+    initiative_id: int,
+    file: UploadFile = File(..., description="Document PDF, Word, Markdown ou Image (max 5 Mo)"),
+    user: UserSession = Depends(get_current_user),
+) -> InitiativeResponse:
+    """
+    Envoie un document de cadrage dans le stockage d'objets MinIO
+    et associe les métadonnées S3 à l'initiative.
+    """
+    MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 Mo
+    file_bytes = await file.read()
+    if len(file_bytes) > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="La taille du document ne doit pas dépasser 5 Mo.",
+        )
+
+    content_type = file.content_type or "application/octet-stream"
+    filename = file.filename or "document.pdf"
+
+    try:
+        return storage_service.attach_initiative_document(
+            initiative_id=initiative_id,
+            file_name=filename,
+            file_bytes=file_bytes,
+            content_type=content_type,
+        )
+    except ValueError as ve:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Erreur MinIO: {e}")
+
+
+@router.get(
+    "/{initiative_id}/document",
+    summary="Télécharger le document de proposition depuis MinIO",
+)
+def download_initiative_document(
+    initiative_id: int,
+    user: UserSession = Depends(get_current_user),
+):
+    """
+    Récupère le document depuis MinIO et le diffuse en streaming binaire
+    avec le header Content-Disposition pour déclencher le téléchargement navigateur.
+    """
+    try:
+        file_bytes, content_type, file_name = storage_service.get_initiative_document(initiative_id)
+        encoded_filename = quote(file_name)
+        headers = {
+            "Content-Disposition": f"attachment; filename=\"{encoded_filename}\"",
+            "Access-Control-Expose-Headers": "Content-Disposition",
+        }
+        return Response(content=file_bytes, media_type=content_type, headers=headers)
+    except FileNotFoundError as fnf:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(fnf))
+    except ValueError as ve:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Erreur téléchargement MinIO: {e}")
 
 
 @router.post(

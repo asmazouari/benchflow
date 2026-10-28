@@ -21,6 +21,11 @@ class InitiativeModel(Base):
     assigne_nom = Column(String(100), nullable=True)
     date_creation = Column(String(20), nullable=False)
     livrable_url = Column(String(500), nullable=True)
+    document_nom = Column(String(255), nullable=True)
+    document_type = Column(String(100), nullable=True)
+    document_taille = Column(Integer, nullable=True)
+    document_s3_key = Column(String(500), nullable=True)
+    document_data = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     def __repr__(self) -> str:

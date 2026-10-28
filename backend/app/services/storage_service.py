@@ -2,7 +2,7 @@ import json
 import logging
 from datetime import date, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Tuple
 
 from sqlalchemy import or_, text
 from sqlalchemy.orm import Session
@@ -13,14 +13,17 @@ from app.models.initiative_model import InitiativeModel
 from app.schemas.collaborateur_schema import (
     CollaborateurCreate,
     CollaborateurResponse,
+    CollaborateurUpdate,
     RadarSummary,
     StatutAlerte,
 )
 from app.schemas.initiative_schema import (
     InitiativeCreate,
     InitiativeResponse,
+    InitiativeUpdate,
     StatutInitiative,
 )
+from app.services.minio_service import minio_service
 
 logger = logging.getLogger(__name__)
 
@@ -38,13 +41,12 @@ def compute_alert(date_fin_str: str) -> tuple[int, StatutAlerte]:
     """
     try:
         fin = datetime.strptime(date_fin_str, "%Y-%m-%d").date()
-        today = date.today()
-        diff = (fin - today).days
-    except Exception:
-        diff = 0
+    except (ValueError, TypeError):
+        return 0, "intermission"
 
+    diff = (fin - date.today()).days
     if diff <= 0:
-        statut: StatutAlerte = "intermission"
+        statut = "intermission"
     elif diff <= 15:
         statut = "urgent"
     else:
@@ -99,19 +101,39 @@ SEED_COLLABORATEURS = [
         "nom": "Mehdi Zayani",
         "email": "mehdi.zayani@benchflow.tech",
         "metier": "Dev",
-        "date_fin_staffing": "2026-10-12",
+        "date_fin_staffing": "2026-12-15",
         "role": "collaborateur",
-        "client_actuel": "Disponible (Inter-projet actif)",
+        "client_actuel": "Portail Logistique",
         "initiative_active_id": None,
     },
     {
         "id": 7,
-        "nom": "Émilie Roux",
-        "email": "emilie.roux@benchflow.tech",
+        "nom": "Emma Rousseau",
+        "email": "emma.rousseau@benchflow.tech",
         "metier": "QA",
-        "date_fin_staffing": "2026-12-15",
+        "date_fin_staffing": "2026-10-18",
         "role": "collaborateur",
-        "client_actuel": "Télécom Santé",
+        "client_actuel": "Mission Télécom",
+        "initiative_active_id": None,
+    },
+    {
+        "id": 8,
+        "nom": "Karim Belhadj",
+        "email": "karim.belhadj@benchflow.tech",
+        "metier": "DevOps",
+        "date_fin_staffing": "2026-11-05",
+        "role": "collaborateur",
+        "client_actuel": "Migration Kubernetes",
+        "initiative_active_id": None,
+    },
+    {
+        "id": 9,
+        "nom": "Sophie Laurent",
+        "email": "sophie.laurent@benchflow.tech",
+        "metier": "PO",
+        "date_fin_staffing": "2026-10-12",
+        "role": "collaborateur",
+        "client_actuel": "Fin cadrage Banque",
         "initiative_active_id": None,
     },
 ]
@@ -119,79 +141,92 @@ SEED_COLLABORATEURS = [
 SEED_INITIATIVES = [
     {
         "id": 101,
-        "titre": "Banc de tests automatisés E2E avec Playwright",
-        "description": "Concevoir un framework de test robuste et réutilisable pour tous les projets web internes de la société.",
+        "titre": "Création d'un Starter Kit Next.js + Tailwind + Clean Architecture",
+        "description": "Normaliser les développements front-end de l'ESN avec un template pré-configuré, documenté et testé.",
+        "metier": "Dev",
+        "duree": "Sprint",
+        "statut": "DISPONIBLE",
+        "origine": "manager",
+        "auteur_nom": "Thomas Laurent (Manager)",
+        "assigne_nom": None,
+        "date_creation": "2026-10-01",
+        "livrable_url": None,
+    },
+    {
+        "id": 102,
+        "titre": "Stratégie de Tests Automatisés E2E avec Playwright",
+        "description": "Mettre en place une suite de tests réutilisable avec génération automatique de rapports HTML.",
         "metier": "QA",
         "duree": "Sprint",
         "statut": "DISPONIBLE",
         "origine": "manager",
         "auteur_nom": "Thomas Laurent (Manager)",
         "assigne_nom": None,
-        "date_creation": "2026-10-10",
-        "livrable_url": None,
-    },
-    {
-        "id": 102,
-        "titre": "Starter Kit Next.js 16 + Tailwind v4 + TypeScript",
-        "description": "Créer un template d'onboarding rapide pour accélérer le démarrage des futurs projets clients.",
-        "metier": "Dev",
-        "duree": "Flash",
-        "statut": "DISPONIBLE",
-        "origine": "manager",
-        "auteur_nom": "Thomas Laurent (Manager)",
-        "assigne_nom": None,
-        "date_creation": "2026-10-11",
+        "date_creation": "2026-10-02",
         "livrable_url": None,
     },
     {
         "id": 103,
-        "titre": "Pipeline CI/CD Terraform & GitHub Actions pour AWS",
-        "description": "Automatiser le provisionnement d'environnements de test éphémères pour les consultants.",
-        "metier": "DevOps",
-        "duree": "Sprint",
-        "statut": "DISPONIBLE",
-        "origine": "manager",
-        "auteur_nom": "Thomas Laurent (Manager)",
-        "assigne_nom": None,
-        "date_creation": "2026-10-12",
-        "livrable_url": None,
-    },
-    {
-        "id": 104,
-        "titre": "Benchmark & Guide d'outils d'IA générative pour Product Owners",
-        "description": "Synthétiser les meilleurs prompts et outils pour rédiger des User Stories 3x plus vite.",
+        "titre": "Template de Cahier des Charges & User Stories pour Projets Agiles",
+        "description": "Standardiser le recueil de besoins et les critères d'acceptation Gherkin pour les avant-ventes.",
         "metier": "PO",
         "duree": "Flash",
         "statut": "DISPONIBLE",
         "origine": "manager",
         "auteur_nom": "Thomas Laurent (Manager)",
         "assigne_nom": None,
-        "date_creation": "2026-10-13",
+        "date_creation": "2026-10-05",
+        "livrable_url": None,
+    },
+    {
+        "id": 104,
+        "titre": "Pipeline CI/CD GitLab générique avec scan SonarQube & Trivy",
+        "description": "Automatiser le contrôle qualité du code et la sécurité des conteneurs Docker pour tous les projets clients.",
+        "metier": "DevOps",
+        "duree": "Sprint",
+        "statut": "DISPONIBLE",
+        "origine": "manager",
+        "auteur_nom": "Thomas Laurent (Manager)",
+        "assigne_nom": None,
+        "date_creation": "2026-10-06",
         "livrable_url": None,
     },
     {
         "id": 105,
-        "titre": "Refonte de l'architecture micro-services en FastAPI",
-        "description": "POC de montée en charge et documentation technique pour nos clients grands comptes.",
+        "titre": "Refonte du module d'authentification OAuth2 / Keycloak",
+        "description": "Sécuriser les endpoints et uniformiser la gestion des rôles RBAC sur l'ensemble des API internes.",
         "metier": "Dev",
-        "duree": "Fond",
+        "duree": "Sprint",
         "statut": "EN_COURS",
         "origine": "manager",
         "auteur_nom": "Thomas Laurent (Manager)",
         "assigne_nom": "Sara Ben Ali",
-        "date_creation": "2026-10-08",
+        "date_creation": "2026-10-10",
         "livrable_url": None,
     },
     {
         "id": 106,
-        "titre": "Passage de certification AWS Certified Developer",
-        "description": "Préparation intensive et passage de l'examen officiel pour renforcer l'expertise Cloud de l'équipe.",
+        "titre": "Veille technologique & Guide de migration vers Java 21 LTS",
+        "description": "Rédiger un livre blanc interne sur les Virtual Threads et les nouvelles fonctionnalités de Java 21.",
         "metier": "Dev",
+        "duree": "Flash",
+        "statut": "TERMINE",
+        "origine": "collaborateur",
+        "auteur_nom": "Sara Ben Ali",
+        "assigne_nom": "Sara Ben Ali",
+        "date_creation": "2026-10-08",
+        "livrable_url": "https://notion.so/benchflow/guide-migration-java21",
+    },
+    {
+        "id": 107,
+        "titre": "Audit d'accessibilité RGAA sur les composants Design System",
+        "description": "Vérifier la conformité contrastes et navigation clavier pour répondre aux normes européennes.",
+        "metier": "QA",
         "duree": "Sprint",
         "statut": "A_VALIDER",
         "origine": "collaborateur",
-        "auteur_nom": "Mehdi Zayani",
-        "assigne_nom": "Mehdi Zayani",
+        "auteur_nom": "Ahmed Kacem",
+        "assigne_nom": "Ahmed Kacem",
         "date_creation": "2026-10-14",
         "livrable_url": None,
     },
@@ -208,23 +243,34 @@ class StorageService:
         try:
             self.init_db()
         except Exception as e:
-            logger.warning(f"Connexion initiale differee ({e})")
+            logger.warning(f"Connexion initiale différée ({e})")
 
     def init_db(self) -> None:
         """
-        Crée les tables SQL si elles n'existent pas et injecte les données initiales
-        (soit depuis storage.json existant, soit depuis les graines par défaut).
+        Crée les tables SQL si elles n'existent pas et injecte les données initiales.
+        Exécute également une migration d'auto-remédiation pour ajouter les colonnes MinIO si absentes.
         """
         Base.metadata.create_all(bind=engine)
 
         db: Session = SessionLocal()
         try:
+            # Migration automatique des colonnes document si table existante
+            if engine.dialect.name == "postgresql":
+                try:
+                    db.execute(text("ALTER TABLE initiatives ADD COLUMN IF NOT EXISTS document_nom VARCHAR(255);"))
+                    db.execute(text("ALTER TABLE initiatives ADD COLUMN IF NOT EXISTS document_type VARCHAR(100);"))
+                    db.execute(text("ALTER TABLE initiatives ADD COLUMN IF NOT EXISTS document_taille INTEGER;"))
+                    db.execute(text("ALTER TABLE initiatives ADD COLUMN IF NOT EXISTS document_s3_key VARCHAR(500);"))
+                    db.commit()
+                except Exception as mig_err:
+                    logger.warning(f"Note migration colonnes initiatives : {mig_err}")
+                    db.rollback()
+
             # 1. Vérification / Amorçage des initiatives
             count_initiatives = db.query(InitiativeModel).count()
             if count_initiatives == 0:
                 initiatives_to_seed = SEED_INITIATIVES
 
-                # Si un fichier JSON existait, on importe ses initiatives
                 if LEGACY_STORAGE_FILE.exists():
                     try:
                         with open(LEGACY_STORAGE_FILE, "r", encoding="utf-8") as f:
@@ -279,7 +325,7 @@ class StorageService:
                     db.add(db_collab)
                 db.commit()
 
-            # 3. Synchronisation préventive des séquences PostgreSQL (évite l'erreur de clé primaire dupliquée)
+            # 3. Synchronisation préventive des séquences PostgreSQL
             if engine.dialect.name == "postgresql":
                 try:
                     db.execute(text("SELECT setval('collaborateurs_id_seq', (SELECT COALESCE(MAX(id), 1) FROM collaborateurs));"))
@@ -382,6 +428,57 @@ class StorageService:
         finally:
             db.close()
 
+    def update_collaborateur(
+        self,
+        collaborateur_id: int,
+        collab_update: CollaborateurUpdate,
+    ) -> CollaborateurResponse:
+        """
+        Met à jour un collaborateur existant (Manager uniquement).
+        Recalcule immédiatement le statut temporel (jours restants et alerte).
+        """
+        db: Session = SessionLocal()
+        try:
+            target = db.query(CollaborateurModel).filter(CollaborateurModel.id == collaborateur_id).first()
+            if not target:
+                raise ValueError(f"Collaborateur {collaborateur_id} introuvable.")
+
+            if collab_update.nom is not None:
+                target.nom = collab_update.nom.strip()
+            if collab_update.email is not None:
+                target.email = collab_update.email.strip().lower()
+            if collab_update.metier is not None:
+                target.metier = collab_update.metier
+            if collab_update.date_fin_staffing is not None:
+                target.date_fin_staffing = collab_update.date_fin_staffing.strip()
+            if collab_update.client_actuel is not None:
+                target.client_actuel = collab_update.client_actuel.strip() or None
+            if collab_update.role is not None:
+                target.role = collab_update.role
+
+            db.commit()
+            db.refresh(target)
+
+            jours, alerte = compute_alert(target.date_fin_staffing)
+
+            return CollaborateurResponse(
+                id=target.id,
+                nom=target.nom,
+                email=target.email,
+                metier=target.metier,
+                date_fin_staffing=target.date_fin_staffing,
+                jours_restants=jours,
+                statut_alerte=alerte,
+                client_actuel=target.client_actuel,
+                role=target.role,
+                initiative_active_id=target.initiative_active_id,
+            )
+        except Exception:
+            db.rollback()
+            raise
+        finally:
+            db.close()
+
     # ==========================================================
     # INITIATIVES & WORKFLOW
     # ==========================================================
@@ -426,6 +523,9 @@ class StorageService:
                     assigne_nom=item.assigne_nom,
                     date_creation=item.date_creation,
                     livrable_url=item.livrable_url,
+                    document_nom=getattr(item, "document_nom", None),
+                    document_type=getattr(item, "document_type", None),
+                    document_taille=getattr(item, "document_taille", None),
                 )
                 for item in items
             ]
@@ -458,6 +558,9 @@ class StorageService:
                 assigne_nom=initiative.assigne_nom,
                 date_creation=date.today().isoformat(),
                 livrable_url=None,
+                document_nom=initiative.document_nom,
+                document_type=initiative.document_type,
+                document_taille=getattr(initiative, "document_taille", None),
             )
             db.add(new_init)
             try:
@@ -485,7 +588,147 @@ class StorageService:
                 assigne_nom=new_init.assigne_nom,
                 date_creation=new_init.date_creation,
                 livrable_url=new_init.livrable_url,
+                document_nom=new_init.document_nom,
+                document_type=new_init.document_type,
+                document_taille=new_init.document_taille,
             )
+        finally:
+            db.close()
+
+    def update_initiative(
+        self,
+        initiative_id: int,
+        init_update: InitiativeUpdate,
+        user_nom: str,
+        is_manager: bool,
+    ) -> InitiativeResponse:
+        """
+        Modifie une initiative existante :
+        - Le Manager peut modifier n'importe quelle initiative.
+        - Le Collaborateur ne peut modifier que sa propre idée tant qu'elle est 'A_VALIDER'.
+        """
+        db: Session = SessionLocal()
+        try:
+            target = db.query(InitiativeModel).filter(InitiativeModel.id == initiative_id).first()
+            if not target:
+                raise ValueError(f"Initiative {initiative_id} introuvable.")
+
+            # Contrôle des droits RBAC
+            if not is_manager:
+                is_author = (
+                    target.auteur_nom.strip().lower() == user_nom.strip().lower()
+                    or user_nom.strip().lower() in target.auteur_nom.lower()
+                )
+                if not is_author:
+                    raise PermissionError("Vous ne pouvez modifier que les initiatives que vous avez créées.")
+                if target.statut != "A_VALIDER":
+                    raise PermissionError("Une initiative déjà validée ou en cours ne peut plus être modifiée.")
+
+            if init_update.titre is not None:
+                target.titre = init_update.titre.strip()
+            if init_update.description is not None:
+                target.description = init_update.description.strip()
+            if init_update.metier is not None:
+                target.metier = init_update.metier
+            if init_update.duree is not None:
+                target.duree = init_update.duree
+
+            db.commit()
+            db.refresh(target)
+
+            return InitiativeResponse(
+                id=target.id,
+                titre=target.titre,
+                description=target.description,
+                metier=target.metier,
+                duree=target.duree,
+                statut=target.statut,
+                origine=target.origine,
+                auteur_nom=target.auteur_nom,
+                assigne_nom=target.assigne_nom,
+                date_creation=target.date_creation,
+                livrable_url=target.livrable_url,
+                document_nom=target.document_nom,
+                document_type=target.document_type,
+                document_taille=target.document_taille,
+            )
+        except Exception:
+            db.rollback()
+            raise
+        finally:
+            db.close()
+
+    def attach_initiative_document(
+        self,
+        initiative_id: int,
+        file_name: str,
+        file_bytes: bytes,
+        content_type: str,
+    ) -> InitiativeResponse:
+        """
+        Téléverse un document de cadrage dans MinIO et associe les métadonnées S3 à l'initiative.
+        """
+        db: Session = SessionLocal()
+        try:
+            target = db.query(InitiativeModel).filter(InitiativeModel.id == initiative_id).first()
+            if not target:
+                raise ValueError(f"Initiative {initiative_id} introuvable.")
+
+            # Envoi du fichier à MinIO
+            object_key, file_size = minio_service.upload_document(
+                initiative_id=initiative_id,
+                file_name=file_name,
+                file_bytes=file_bytes,
+                content_type=content_type,
+            )
+
+            # Mise à jour des métadonnées relationnelles
+            target.document_nom = file_name
+            target.document_type = content_type
+            target.document_taille = file_size
+            target.document_s3_key = object_key
+
+            db.commit()
+            db.refresh(target)
+
+            return InitiativeResponse(
+                id=target.id,
+                titre=target.titre,
+                description=target.description,
+                metier=target.metier,
+                duree=target.duree,
+                statut=target.statut,
+                origine=target.origine,
+                auteur_nom=target.auteur_nom,
+                assigne_nom=target.assigne_nom,
+                date_creation=target.date_creation,
+                livrable_url=target.livrable_url,
+                document_nom=target.document_nom,
+                document_type=target.document_type,
+                document_taille=target.document_taille,
+            )
+        except Exception:
+            db.rollback()
+            raise
+        finally:
+            db.close()
+
+    def get_initiative_document(self, initiative_id: int) -> Tuple[bytes, str, str]:
+        """
+        Récupère le fichier binaire depuis MinIO pour le téléchargement.
+        Renvoie (contenu_binaire, content_type, nom_fichier).
+        """
+        db: Session = SessionLocal()
+        try:
+            target = db.query(InitiativeModel).filter(InitiativeModel.id == initiative_id).first()
+            if not target:
+                raise ValueError(f"Initiative {initiative_id} introuvable.")
+            if not target.document_s3_key:
+                raise FileNotFoundError(f"Aucun document n'est rattaché à l'initiative {initiative_id}.")
+
+            file_bytes, content_type, file_name = minio_service.get_document_stream(target.document_s3_key)
+            real_name = target.document_nom or file_name
+            return file_bytes, content_type, real_name
         finally:
             db.close()
 
@@ -504,7 +747,6 @@ class StorageService:
             target.statut = "EN_COURS"
             target.assigne_nom = user_nom
 
-            # Mise à jour du collaborateur s'il existe
             collab = (
                 db.query(CollaborateurModel)
                 .filter(CollaborateurModel.nom.ilike(user_nom.strip()))
@@ -528,6 +770,9 @@ class StorageService:
                 assigne_nom=target.assigne_nom,
                 date_creation=target.date_creation,
                 livrable_url=target.livrable_url,
+                document_nom=target.document_nom,
+                document_type=target.document_type,
+                document_taille=target.document_taille,
             )
         except Exception:
             db.rollback()
@@ -566,6 +811,9 @@ class StorageService:
                 assigne_nom=target.assigne_nom,
                 date_creation=target.date_creation,
                 livrable_url=target.livrable_url,
+                document_nom=target.document_nom,
+                document_type=target.document_type,
+                document_taille=target.document_taille,
             )
         except Exception:
             db.rollback()
@@ -597,6 +845,9 @@ class StorageService:
                 assigne_nom=target.assigne_nom,
                 date_creation=target.date_creation,
                 livrable_url=target.livrable_url,
+                document_nom=target.document_nom,
+                document_type=target.document_type,
+                document_taille=target.document_taille,
             )
         except Exception:
             db.rollback()
@@ -618,7 +869,6 @@ class StorageService:
             target.statut = "TERMINE"
             target.livrable_url = livrable_url
 
-            # Libère le collaborateur qui était affecté
             collabs = (
                 db.query(CollaborateurModel)
                 .filter(CollaborateurModel.initiative_active_id == initiative_id)
@@ -642,6 +892,9 @@ class StorageService:
                 assigne_nom=target.assigne_nom,
                 date_creation=target.date_creation,
                 livrable_url=target.livrable_url,
+                document_nom=target.document_nom,
+                document_type=target.document_type,
+                document_taille=target.document_taille,
             )
         except Exception:
             db.rollback()

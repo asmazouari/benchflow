@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from app.core.keycloak_auth import UserSession, get_current_user, require_manager
 from app.schemas.collaborateur_schema import (
     CollaborateurCreate,
     CollaborateurResponse,
+    CollaborateurUpdate,
     RadarSummary,
 )
 from app.services.storage_service import storage_service
@@ -52,3 +53,24 @@ def create_collaborateur(
     Verrouillage RBAC : Strictement réservé au rôle 'manager' (HTTP 403 Forbidden sinon).
     """
     return storage_service.create_collaborateur(collab)
+
+
+@router.put(
+    "/{collaborateur_id}",
+    response_model=CollaborateurResponse,
+    summary="Met à jour un collaborateur existant (Manager uniquement)",
+)
+def update_collaborateur(
+    collaborateur_id: int,
+    collab: CollaborateurUpdate,
+    manager: UserSession = Depends(require_manager),
+) -> CollaborateurResponse:
+    """
+    Met à jour les informations d'un collaborateur (métier, client, date de fin).
+    Recalcule immédiatement le statut d'alerte et les jours restants.
+    Verrouillage RBAC : Strictement réservé au rôle 'manager' (HTTP 403 Forbidden sinon).
+    """
+    try:
+        return storage_service.update_collaborateur(collaborateur_id, collab)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))

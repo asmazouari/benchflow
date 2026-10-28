@@ -27,6 +27,34 @@ class InitiativeCreate(InitiativeBase):
     """
     auteur_nom: str = Field(..., description="Nom de l'auteur (Manager ou Collaborateur)")
     assigne_nom: str | None = Field(default=None, description="Nom du collaborateur si auto-proposé")
+    document_nom: str | None = Field(default=None, description="Nom du document joint si présent")
+    document_type: str | None = Field(default=None, description="Type MIME du document")
+    document_taille: int | None = Field(default=None, description="Taille du document en octets")
+    document_data: str | None = Field(default=None, description="Contenu Base64 du document")
+
+
+class InitiativeUpdate(BaseModel):
+    """
+    Schéma pour modifier une initiative existante.
+    Tous les champs sont optionnels pour les modifications partielles.
+    """
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    titre: str | None = Field(default=None, description="Titre mis à jour")
+    description: str | None = Field(default=None, description="Description mise à jour")
+    metier: Metier | None = Field(default=None, description="Métier concerné")
+    duree: Duree | None = Field(default=None, description="Format d'effort")
+
+
+class InitiativeDocumentUpload(BaseModel):
+    """
+    Schéma pour uploader un document de cadrage (Base64) associé à une initiative.
+    """
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    document_nom: str = Field(..., description="Nom du fichier avec extension (ex: Proposition_AWS.pdf)")
+    document_type: str = Field(..., description="Type MIME (ex: application/pdf, text/markdown)")
+    document_data: str = Field(..., description="Contenu du fichier encodé en Base64")
 
 
 class TakeInitiativeRequest(BaseModel):
@@ -58,3 +86,6 @@ class InitiativeResponse(InitiativeBase):
     assigne_nom: str | None = Field(default=None, description="Collaborateur qui travaille actuellement dessus")
     date_creation: str = Field(..., description="Date de création au format YYYY-MM-DD")
     livrable_url: str | None = Field(default=None, description="URL finale une fois le projet terminé")
+    document_nom: str | None = Field(default=None, description="Nom du document joint si présent")
+    document_type: str | None = Field(default=None, description="Type MIME du document")
+    document_taille: int | None = Field(default=None, description="Taille du document en octets")
