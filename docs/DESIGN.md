@@ -42,4 +42,4 @@ Ce document résume le système de design officiel généré par Google Stitch p
 
 - **Projet Stitch :** [Ouvrir le projet sur Google Stitch](https://stitch.google.com/projects/6344421284443761159)
 - **Écran Canvas :** [Ouvrir l'écran BenchFlow](https://stitch.google.com/projects/6344421284443761159?node-id=40aa59258247427fafd6d88eab61860e)
-- **Fichier HTML source :** `smart-task/docs/stitch-benchflow.html` (65 Ko)
+- **Fichier HTML source :** `benchFlow/docs/stitch-benchflow.html` (65 Ko)

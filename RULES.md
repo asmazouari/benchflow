@@ -1,6 +1,6 @@
 # 📜 Règles Officielles du Projet (Project Guidelines)
 
-Ce document définit les règles d'architecture, de qualité de code et d'intégration de l'IA pour le projet **SmartTask AI**. 
+Ce document définit les règles d'architecture, de qualité de code et d'intégration de l'IA pour le projet **BenchFlow**. 
 **Toute nouvelle fonctionnalité doit impérativement respecter ces règles.**
 
 ---
@@ -10,17 +10,19 @@ Ce document définit les règles d'architecture, de qualité de code et d'intég
 Chaque fichier doit être placé dans son dossier dédié. **Aucun fichier de code en vrac n'est autorisé.**
 
 ```text
-smart-task/
+benchFlow/
 ├── backend/app/
 │   ├── api/          -> UNIQUEMENT les routes HTTP (FastAPI APIRouter)
 │   ├── core/         -> Configuration, variables d'environnement (.env)
+│   ├── models/       -> Entités de base de données SQLAlchemy
 │   ├── schemas/      -> Modèles de données Pydantic (validation des entrées/sorties)
-│   └── services/     -> Logique métier, stockage, et appels à Ollama
-└── frontend/
-    ├── app/          -> Pages et Layouts Next.js (App Router)
-    ├── components/   -> Composants React réutilisables (TaskCard, UnblockModal...)
-    ├── lib/          -> Fonctions d'appel API (fetch) vers FastAPI
-    └── types/        -> Interfaces et types TypeScript
+│   └── services/     -> Logique métier, stockage MinIO, et appels à Ollama
+└── frontend/src/
+    ├── app/          -> Pages et Layouts Next.js (App Router, Niveau 5 Page)
+    ├── components/   -> Composants Atomic Design purs (atoms, molecules, organisms, templates)
+    ├── hooks/        -> Custom hooks (useAuthSession, useBenchFlowData)
+    ├── lib/          -> Fonctions d'appel API (fetch) vers FastAPI, constantes et utilitaires
+    └── types/        -> Interfaces et types TypeScript stricts par domaine
 ```
 
 ---
@@ -37,7 +39,7 @@ smart-task/
    * `routes_initiatives.py` : Catalogue d'initiatives, prise en charge immédiate, validations et clôture.
    * `routes_ai.py` : Suggestions et enrichissements d'initiatives par Ollama.
 3. **Isolation des services :**
-   * Les routes HTTP délèguent toujours aux services dans `app/services/` (`storage_service.py`, `ollama_service.py`).
+   * Les routes HTTP délèguent toujours aux services dans `app/services/` (`storage_service.py`, `ollama_service.py`, `minio_service.py`).
 4. **Gestion des exceptions :**
    * Renvoyer systématiquement des codes HTTP explicites avec `HTTPException` (ex: 404 Not Found, 400 Bad Request, 503 Service Unavailable).
 
@@ -47,20 +49,22 @@ smart-task/
 
 1. **TypeScript strict :**
    * Le type `any` est **strictement interdit**.
-   * Toutes les données reçues de l'API doivent correspondre à une interface définie dans `types/index.ts`.
+   * Toutes les données reçues de l'API doivent correspondre à une interface définie dans `@/types`.
 2. **Centralisation des appels réseau :**
    * Aucun composant React ne doit écrire d'URL en dur (`http://localhost:8000/...`).
-   * Tous les appels `fetch` sont regroupés dans `lib/api.ts` et utilisent la variable `process.env.NEXT_PUBLIC_API_URL`.
-3. **Composants UI Atomiques & Réutilisables (Zéro Redondance) :**
-   * Tout élément générique (Bouton, Badge, Input, Modal) doit être placé dans `frontend/components/ui/`.
-   * Chaque composant est configuré exclusivement via ses **props** (`variant`, `size`, `isLoading`, `onClick`...) pour être 100% réutilisable.
-4. **Gestion Propre des Icônes SVG (Isolées et Typées) :**
-   * Les icônes personnalisées (extraites de Stitch) doivent être créées sous forme de composants dans `frontend/components/icons/`.
-   * Tout SVG doit être typé avec l'interface `IconProps` définie dans `frontend/types/icons.ts`.
+   * Tous les appels `fetch` sont regroupés dans `@/lib/api` et utilisent la variable `process.env.NEXT_PUBLIC_API_URL`.
+3. **Composants UI Atomic Design (Zéro Redondance) :**
+   * Structuration stricte selon les 4 niveaux de composants :
+     - `components/atoms/` (Button, Badge, Card, Input, Select)
+     - `components/molecules/` (DocumentBadge, KpiCard, SearchBar, FilterPills, FileDropzone)
+     - `components/organisms/` (CollaborateurModal, InitiativeModal, CollaborateursTable, Navbar, LoginView...)
+     - `components/templates/` (RadarTab, CatalogTab, ValidationTab)
+   - Chaque atome et molécule est configuré exclusivement via ses **props** (`variant`, `size`, `isLoading`, `onClick`...) pour être 100% réutilisable.
+4. **Gestion Propre des Icônes :**
+   * Utiliser **Lucide React** (`lucide-react`) pour les icônes standards du système.
    * **Interdiction stricte** d'écrire des blocs `<svg>...</svg>` bruts au milieu des pages ou des composants métiers.
 5. **Design & Découpage :**
    * Utiliser **Tailwind CSS** pour le stylage.
-   * Utiliser **Lucide React** (`lucide-react`) pour les icônes standards du système.
    * Découper les composants en briques unitaires propres (Single Responsibility Principle).
 
 ---
