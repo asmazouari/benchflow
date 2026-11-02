@@ -7,9 +7,9 @@ import {
   UserProfile,
   CollaborateurUpdatePayload,
   InitiativeUpdatePayload,
-} from '../types';
-import { INITIAL_COLLABORATEURS, INITIAL_INITIATIVES } from '../lib/mockData';
-import { api } from '../lib/api';
+} from '@/types';
+import { INITIAL_COLLABORATEURS, INITIAL_INITIATIVES } from '@/lib/mockData';
+import { api } from '@/lib/api';
 
 interface UseBenchFlowDataOptions {
   currentUser?: UserProfile | null;

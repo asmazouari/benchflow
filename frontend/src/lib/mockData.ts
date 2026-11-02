@@ -1,4 +1,4 @@
-import { Collaborateur, Initiative, UserProfile } from '../types';
+import { Collaborateur, Initiative, UserProfile } from '@/types';
 
 export const MOCK_USERS: UserProfile[] = [
   { id: 1, nom: 'Thomas Laurent', email: 'thomas.laurent@benchflow.tech', role: 'manager' },

@@ -8,9 +8,9 @@ import {
   UserProfile,
   Metier,
   Duree,
-} from '../../types';
-import { Button } from '../atoms';
-import { InitiativeCard, InitiativeModal, AiSuggestionModal } from '../organisms';
+} from '@/types';
+import { Button } from '@/components/atoms';
+import { InitiativeCard, InitiativeModal, AiSuggestionModal } from '@/components/organisms';
 import {
   Check,
   X,

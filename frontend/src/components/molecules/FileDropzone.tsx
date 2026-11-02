@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { FILE_UPLOAD_CONFIG } from '../../lib/constants';
-import { formatFileSize } from '../../lib/utils';
+import { FILE_UPLOAD_CONFIG } from '@/lib/constants';
+import { formatFileSize } from '@/lib/utils';
 import { UploadCloud, FileText, X, AlertCircle, Paperclip } from 'lucide-react';
 
 /**

@@ -1,4 +1,4 @@
-import { Metier, Duree } from '../types';
+import { Metier, Duree } from '@/types';
 
 /**
  * Constantes globales de l'application BenchFlow

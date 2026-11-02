@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { UserProfile } from '../types';
-import { api, authStorage, LoginResponse } from '../lib/api';
+import { UserProfile } from '@/types';
+import { api, authStorage, LoginResponse } from '@/lib/api';
 
 /**
  * Hook personnalisé gérant la session d'authentification Keycloak / JWT.

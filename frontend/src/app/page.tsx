@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Navbar, LoginView } from '../components/organisms';
-import { RadarTab, CatalogTab, ValidationTab } from '../components/templates';
-import { useAuthSession, useBenchFlowData } from '../hooks';
+import { Navbar, LoginView } from '@/components/organisms';
+import { RadarTab, CatalogTab, ValidationTab } from '@/components/templates';
+import { useAuthSession, useBenchFlowData } from '@/hooks';
 import { Loader2, Sparkles } from 'lucide-react';
 
 /**

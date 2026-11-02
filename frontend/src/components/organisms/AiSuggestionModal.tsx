@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Metier, Duree, AiSuggestedInitiative, AiSuggestionResponse } from '../../types';
-import { api } from '../../lib/api';
-import { Badge, Button } from '../atoms';
-import { METIERS_PROFILES } from '../../lib/constants';
+import { Metier, Duree, AiSuggestedInitiative, AiSuggestionResponse } from '@/types';
+import { api } from '@/lib/api';
+import { Badge, Button } from '@/components/atoms';
+import { METIERS_PROFILES } from '@/lib/constants';
 import { Sparkles, Plus, Check, X } from 'lucide-react';
 
 /**

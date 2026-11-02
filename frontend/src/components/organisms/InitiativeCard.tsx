@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Initiative } from '../../types';
-import { Badge } from '../atoms';
-import { DocumentBadge } from '../molecules';
+import { Initiative } from '@/types';
+import { Badge } from '@/components/atoms';
+import { DocumentBadge } from '@/components/molecules';
 import { ShieldCheck, UserCheck, Pencil } from 'lucide-react';
 
 /**

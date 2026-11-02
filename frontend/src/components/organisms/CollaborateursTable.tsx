@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Collaborateur, UserProfile } from '../../types';
-import { Badge } from '../atoms';
-import { getInitials, formatAlertBadgeLabel } from '../../lib/utils';
+import { Collaborateur, UserProfile } from '@/types';
+import { Badge } from '@/components/atoms';
+import { getInitials, formatAlertBadgeLabel } from '@/lib/utils';
 import { Briefcase, Calendar, ArrowUpRight, Pencil } from 'lucide-react';
 
 /**

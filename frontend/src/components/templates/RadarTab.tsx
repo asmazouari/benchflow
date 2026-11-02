@@ -8,11 +8,11 @@ import {
   UserProfile,
   Metier,
   StatutAlerte,
-} from '../../types';
-import { Button } from '../atoms';
-import { KpiCard, SearchBar, FilterPills } from '../molecules';
-import { CollaborateursTable, CollaborateurModal } from '../organisms';
-import { METIERS_FILTER } from '../../lib/constants';
+} from '@/types';
+import { Button } from '@/components/atoms';
+import { KpiCard, SearchBar, FilterPills } from '@/components/molecules';
+import { CollaborateursTable, CollaborateurModal } from '@/components/organisms';
+import { METIERS_FILTER } from '@/lib/constants';
 import { UserPlus } from 'lucide-react';
 
 /**

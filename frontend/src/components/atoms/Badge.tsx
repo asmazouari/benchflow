@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Metier, StatutAlerte, StatutInitiative, Duree } from '../../types';
+import { Metier, StatutAlerte, StatutInitiative, Duree } from '@/types';
 
 /**
  * Atome Badge — Design System Stitch (BenchFlow)

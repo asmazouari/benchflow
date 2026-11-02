@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { api } from '../../lib/api';
-import { formatFileSize } from '../../lib/utils';
+import { api } from '@/lib/api';
+import { formatFileSize } from '@/lib/utils';
 import { FileText, Download } from 'lucide-react';
 
 /**

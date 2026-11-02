@@ -1,4 +1,4 @@
-import { StatutAlerte } from '../types';
+import { StatutAlerte } from '@/types';
 import { ALERT_THRESHOLDS } from './constants';
 
 /**

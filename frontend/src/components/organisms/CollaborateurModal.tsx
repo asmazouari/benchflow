@@ -6,14 +6,14 @@ import {
   CollaborateurCreatePayload,
   CollaborateurUpdatePayload,
   Metier,
-} from '../../types';
-import { Button, Badge, Input } from '../atoms';
-import { METIERS_PROFILES } from '../../lib/constants';
+} from '@/types';
+import { Button, Badge, Input } from '@/components/atoms';
+import { METIERS_PROFILES } from '@/lib/constants';
 import {
   calculateDaysRemaining,
   calculateAlertStatus,
   formatAlertBadgeLabel,
-} from '../../lib/utils';
+} from '@/lib/utils';
 import { UserPlus, UserCog, Calendar, Briefcase, Mail, User, X, Loader2, AlertCircle } from 'lucide-react';
 
 /**

@@ -8,11 +8,11 @@ import {
   UserProfile,
   Metier,
   Duree,
-} from '../../types';
-import { Button, Card } from '../atoms';
-import { FilterPills } from '../molecules';
-import { InitiativeCard, InitiativeModal, AiSuggestionModal } from '../organisms';
-import { METIERS_FILTER, DUREES_FILTER } from '../../lib/constants';
+} from '@/types';
+import { Button, Card } from '@/components/atoms';
+import { FilterPills } from '@/components/molecules';
+import { InitiativeCard, InitiativeModal, AiSuggestionModal } from '@/components/organisms';
+import { METIERS_FILTER, DUREES_FILTER } from '@/lib/constants';
 import { Plus, Check, Sparkles } from 'lucide-react';
 
 /**

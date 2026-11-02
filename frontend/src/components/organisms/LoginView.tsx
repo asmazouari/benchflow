@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Sparkles, Mail, Lock, Eye, EyeOff, ArrowRight, ShieldCheck, AlertCircle, Loader2 } from 'lucide-react';
-import { api, LoginResponse } from '../../lib/api';
+import { api, LoginResponse } from '@/lib/api';
 
 /**
  * Organisme LoginView — Niveau 3 Atomic Design (BenchFlow)

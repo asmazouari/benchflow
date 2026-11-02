@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { UserProfile } from '../../types';
-import { getInitials } from '../../lib/utils';
+import { UserProfile } from '@/types';
+import { getInitials } from '@/lib/utils';
 import { Users, Lightbulb, Clock, Sparkles, LogOut, Shield } from 'lucide-react';
 
 /**

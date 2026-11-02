@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Initiative, Metier, Duree } from '../../types';
-import { Button, Input } from '../atoms';
-import { FileDropzone } from '../molecules';
-import { METIERS_FILTER, DUREES_CREATION } from '../../lib/constants';
-import { formatFileSize } from '../../lib/utils';
+import { Initiative, Metier, Duree } from '@/types';
+import { Button, Input } from '@/components/atoms';
+import { FileDropzone } from '@/components/molecules';
+import { METIERS_FILTER, DUREES_CREATION } from '@/lib/constants';
+import { formatFileSize } from '@/lib/utils';
 import {
   Sparkles,
   Edit3,

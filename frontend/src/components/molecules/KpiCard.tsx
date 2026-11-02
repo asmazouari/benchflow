@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { StatutAlerte } from '../../types';
+import { StatutAlerte } from '@/types';
 
 /**
  * Molécule KpiCard — Niveau 2 Atomic Design (BenchFlow)
