@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Initiative, Metier, Duree } from '../../types';
 import { Button, Input } from '../atoms';
 import { FileDropzone } from '../molecules';
@@ -24,11 +24,6 @@ import {
  * 1. Proposition collaborateur (avec dropzone MinIO S3)
  * 2. Dépôt manager d'initiative pré-validée au catalogue
  * 3. Modification d'une initiative existante (par le manager ou l'auteur)
- * 
- * Remplace :
- * - Le formulaire inliné dans CatalogTab (~75 lignes)
- * - Le formulaire inliné dans ValidationTab (~170 lignes)
- * - Le composant EditInitiativeModal (~180 lignes)
  */
 export interface InitiativeModalProps {
   isOpen: boolean;
@@ -47,42 +42,22 @@ export interface InitiativeModalProps {
   isManager?: boolean;
 }
 
-export function InitiativeModal({
-  isOpen,
-  onClose,
+function InitiativeDialogContent({
   initialData,
+  onClose,
   onSubmit,
   allowFileUpload = false,
   isManager = false,
-}: InitiativeModalProps) {
+}: Omit<InitiativeModalProps, 'isOpen'>) {
   const isEditMode = Boolean(initialData);
 
-  const [titre, setTitre] = useState('');
-  const [description, setDescription] = useState('');
-  const [metier, setMetier] = useState<Metier>('Dev');
-  const [duree, setDuree] = useState<Duree>('Sprint');
+  const [titre, setTitre] = useState(initialData?.titre || '');
+  const [description, setDescription] = useState(initialData?.description || '');
+  const [metier, setMetier] = useState<Metier>(initialData?.metier || 'Dev');
+  const [duree, setDuree] = useState<Duree>(initialData?.duree || 'Sprint');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (initialData) {
-      setTitre(initialData.titre || '');
-      setDescription(initialData.description || '');
-      setMetier(initialData.metier || 'Dev');
-      setDuree(initialData.duree || 'Sprint');
-      setSelectedFile(null);
-    } else {
-      setTitre('');
-      setDescription('');
-      setMetier('Dev');
-      setDuree('Sprint');
-      setSelectedFile(null);
-    }
-    setError(null);
-  }, [initialData, isOpen]);
-
-  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,8 +80,9 @@ export function InitiativeModal({
         selectedFile
       );
       onClose();
-    } catch (err: any) {
-      setError(err.message || 'Une erreur est survenue lors de l’enregistrement de l’initiative.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Une erreur est survenue lors de l’enregistrement de l’initiative.';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -295,5 +271,27 @@ export function InitiativeModal({
         </form>
       </div>
     </div>
+  );
+}
+
+export function InitiativeModal({
+  isOpen,
+  onClose,
+  initialData,
+  onSubmit,
+  allowFileUpload = false,
+  isManager = false,
+}: InitiativeModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <InitiativeDialogContent
+      key={initialData?.id ?? (allowFileUpload ? 'propose-initiative' : 'create-initiative')}
+      initialData={initialData}
+      onClose={onClose}
+      onSubmit={onSubmit}
+      allowFileUpload={allowFileUpload}
+      isManager={isManager}
+    />
   );
 }

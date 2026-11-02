@@ -97,11 +97,22 @@ export const api = {
       await handleResponseError(res, 'Erreur serveur Keycloak');
     }
 
-    const data: any = await res.json();
+    const data = (await res.json()) as {
+      accessToken?: string;
+      access_token?: string;
+      tokenType?: string;
+      token_type?: string;
+      expiresIn?: number;
+      expires_in?: number;
+      refreshToken?: string;
+      refresh_token?: string;
+      user: UserProfile;
+    };
     const token = data.accessToken || data.access_token;
-    if (token) {
-      authStorage.setToken(token);
+    if (!token) {
+      throw new Error("Jeton d'accès absent de la réponse du serveur.");
     }
+    authStorage.setToken(token);
     return {
       accessToken: token,
       tokenType: data.tokenType || data.token_type || 'Bearer',

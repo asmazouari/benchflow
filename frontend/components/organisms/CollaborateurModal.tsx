@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Collaborateur,
   CollaborateurCreatePayload,
@@ -19,10 +19,6 @@ import { UserPlus, UserCog, Calendar, Briefcase, Mail, User, X, Loader2, AlertCi
 /**
  * Organisme CollaborateurModal — Niveau 3 Atomic Design (BenchFlow)
  * Formulaire unifié gérant à la fois la CRÉATION et l'ÉDITION d'un consultant.
- * 
- * Remplace :
- * - Le formulaire inliné de 100 lignes dans RadarTab (Création)
- * - Le composant EditCollaborateurModal (Édition)
  */
 export interface CollaborateurModalProps {
   isOpen: boolean;
@@ -31,40 +27,22 @@ export interface CollaborateurModalProps {
   onSave: (data: CollaborateurCreatePayload | CollaborateurUpdatePayload) => Promise<void>;
 }
 
-export function CollaborateurModal({
-  isOpen,
-  onClose,
+function CollaborateurDialogContent({
   initialData,
+  onClose,
   onSave,
-}: CollaborateurModalProps) {
+}: Omit<CollaborateurModalProps, 'isOpen'>) {
   const isEditMode = Boolean(initialData);
 
-  const [nom, setNom] = useState('');
-  const [email, setEmail] = useState('');
-  const [metier, setMetier] = useState<Metier>('Dev');
-  const [clientActuel, setClientActuel] = useState('');
-  const [dateFinStaffing, setDateFinStaffing] = useState('');
+  const [nom, setNom] = useState(initialData?.nom || '');
+  const [email, setEmail] = useState(initialData?.email || '');
+  const [metier, setMetier] = useState<Metier>(
+    initialData?.metier === 'Tous' ? 'Dev' : initialData?.metier || 'Dev'
+  );
+  const [clientActuel, setClientActuel] = useState(initialData?.clientActuel || '');
+  const [dateFinStaffing, setDateFinStaffing] = useState(initialData?.dateFinStaffing || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (initialData) {
-      setNom(initialData.nom || '');
-      setEmail(initialData.email || '');
-      setMetier(initialData.metier === 'Tous' ? 'Dev' : initialData.metier || 'Dev');
-      setClientActuel(initialData.clientActuel || '');
-      setDateFinStaffing(initialData.dateFinStaffing || '');
-    } else {
-      setNom('');
-      setEmail('');
-      setMetier('Dev');
-      setClientActuel('');
-      setDateFinStaffing('');
-    }
-    setError(null);
-  }, [initialData, isOpen]);
-
-  if (!isOpen) return null;
 
   // Calcul prédictif en direct de l'anticipation Radar
   const previewDays = calculateDaysRemaining(dateFinStaffing);
@@ -100,8 +78,9 @@ export function CollaborateurModal({
         });
       }
       onClose();
-    } catch (err: any) {
-      setError(err.message || 'Une erreur est survenue lors de l’enregistrement.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Une erreur est survenue lors de l’enregistrement.';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -256,5 +235,23 @@ export function CollaborateurModal({
         </form>
       </div>
     </div>
+  );
+}
+
+export function CollaborateurModal({
+  isOpen,
+  onClose,
+  initialData,
+  onSave,
+}: CollaborateurModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <CollaborateurDialogContent
+      key={initialData?.id ?? 'create-collaborateur'}
+      initialData={initialData}
+      onClose={onClose}
+      onSave={onSave}
+    />
   );
 }

@@ -28,8 +28,9 @@ export function LoginView({ onLoginSuccess }: LoginViewProps) {
     try {
       const response = await api.login(email.trim(), password);
       onLoginSuccess(response);
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Identifiants incorrects. Accès refusé par Keycloak.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Identifiants incorrects. Accès refusé par Keycloak.';
+      setErrorMessage(message);
     } finally {
       setLoading(false);
     }

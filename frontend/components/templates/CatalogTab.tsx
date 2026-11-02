@@ -85,8 +85,7 @@ export function CatalogTab({
       description: string;
       metier: Metier;
       duree: Duree;
-    },
-    _file?: File | null
+    }
   ) => {
     if (modalState.initiativeToEdit && onUpdateInitiative) {
       await onUpdateInitiative(modalState.initiativeToEdit.id, data);

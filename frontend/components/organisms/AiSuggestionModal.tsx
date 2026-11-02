@@ -5,7 +5,7 @@ import { Metier, Duree, AiSuggestedInitiative, AiSuggestionResponse } from '../.
 import { api } from '../../lib/api';
 import { Badge, Button } from '../atoms';
 import { METIERS_PROFILES } from '../../lib/constants';
-import { Sparkles, Loader2, Plus, Check, X } from 'lucide-react';
+import { Sparkles, Plus, Check, X } from 'lucide-react';
 
 /**
  * Organisme AiSuggestionModal — Niveau 3 Atomic Design (BenchFlow)
@@ -48,8 +48,9 @@ export function AiSuggestionModal({
     try {
       const data = await api.getAiSuggestions(selectedMetier, contexte.trim() || undefined);
       setResult(data);
-    } catch (err: any) {
-      alert(`Erreur de génération : ${err.message || 'Impossible de contacter le moteur IA'}`);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Impossible de contacter le moteur IA';
+      alert(`Erreur de génération : ${message}`);
     } finally {
       setLoading(false);
     }

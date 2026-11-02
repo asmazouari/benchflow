@@ -23,12 +23,10 @@ export default function Home() {
   const [collaborateurs, setCollaborateurs] = useState<Collaborateur[]>(INITIAL_COLLABORATEURS);
   const [initiatives, setInitiatives] = useState<Initiative[]>(INITIAL_INITIATIVES);
   const [isBackendLive, setIsBackendLive] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
 
   // Charge les données fraîches depuis le backend FastAPI
   const loadDashboardData = useCallback(async () => {
     try {
-      setLoading(true);
       const [summary, inits] = await Promise.all([
         api.getRadarSummary(),
         api.getInitiatives(),
@@ -39,8 +37,6 @@ export default function Home() {
     } catch (err) {
       console.warn('Backend FastAPI non connecté ou erreur de chargement, données de secours :', err);
       setIsBackendLive(false);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
@@ -97,9 +93,10 @@ export default function Home() {
         const summary = await api.getRadarSummary();
         setCollaborateurs(summary.collaborateurs);
         return;
-      } catch (e: any) {
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : 'Échec de connexion';
         console.error('Erreur API createCollaborateur :', e);
-        alert(`Erreur d'enregistrement sur le serveur : ${e.message || 'Échec de connexion'}`);
+        alert(`Erreur d'enregistrement sur le serveur : ${message}`);
         return;
       }
     }
@@ -132,7 +129,7 @@ export default function Home() {
         const summary = await api.getRadarSummary();
         setCollaborateurs(summary.collaborateurs);
         return;
-      } catch (e: any) {
+      } catch (e: unknown) {
         console.error('Erreur API updateCollaborateur :', e);
         throw e;
       }
@@ -265,7 +262,7 @@ export default function Home() {
           prev.map((init) => (init.id === id ? updated : init))
         );
         return;
-      } catch (e: any) {
+      } catch (e: unknown) {
         console.error('Erreur API updateInitiative :', e);
         throw e;
       }
@@ -338,7 +335,7 @@ export default function Home() {
   };
 
   // Redirection automatique quand on clique sur "Voir initiatives" depuis le Radar
-  const handleSelectCollaborateur = (_collab: Collaborateur) => {
+  const handleSelectCollaborateur = () => {
     setActiveTab('catalog');
   };
 
