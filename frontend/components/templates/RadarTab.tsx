@@ -1,28 +1,29 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Collaborateur, CollaborateurUpdatePayload, UserProfile, Metier } from '../../types';
-import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
+import React, { useState, useMemo } from 'react';
 import {
-  AlertCircle,
-  CheckCircle2,
-  AlertTriangle,
-  UserPlus,
-  Calendar,
-  Briefcase,
-  Filter,
-  Search,
-  Sparkles,
-  ArrowUpRight,
-  Pencil,
-} from 'lucide-react';
-import { EditCollaborateurModal } from '../ui/EditCollaborateurModal';
+  Collaborateur,
+  CollaborateurCreatePayload,
+  CollaborateurUpdatePayload,
+  UserProfile,
+  Metier,
+  StatutAlerte,
+} from '../../types';
+import { Button } from '../atoms';
+import { KpiCard, SearchBar, FilterPills } from '../molecules';
+import { CollaborateursTable, CollaborateurModal } from '../organisms';
+import { METIERS_FILTER } from '../../lib/constants';
+import { UserPlus } from 'lucide-react';
 
-interface RadarTabProps {
+/**
+ * Template RadarTab — Niveau 4 Atomic Design (BenchFlow)
+ * Squelette de présentation de la matrice de staffing & anticipation d'inter-projet.
+ * Assemble les atomes, molécules et organismes de façon pure et déclarative.
+ */
+export interface RadarTabProps {
   collaborateurs: Collaborateur[];
   currentUser: UserProfile;
-  onAddCollaborateur: (collab: Omit<Collaborateur, 'id' | 'joursRestants' | 'statutAlerte'>) => void;
+  onAddCollaborateur: (collab: CollaborateurCreatePayload) => void;
   onSelectCollaborateur: (collab: Collaborateur) => void;
   onUpdateCollaborateur?: (id: number, data: CollaborateurUpdatePayload) => Promise<void>;
 }
@@ -34,57 +35,75 @@ export function RadarTab({
   onSelectCollaborateur,
   onUpdateCollaborateur,
 }: RadarTabProps) {
+  const isManager = currentUser.role === 'manager';
+
   const [selectedMetier, setSelectedMetier] = useState<Metier>('Tous');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'stable' | 'urgent' | 'intermission'>('all');
+  const [filterStatus, setFilterStatus] = useState<'all' | StatutAlerte>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [editingCollab, setEditingCollab] = useState<Collaborateur | null>(null);
 
-  // Form states
-  const [newNom, setNewNom] = useState('');
-  const [newEmail, setNewEmail] = useState('');
-  const [newMetier, setNewMetier] = useState<Metier>('Dev');
-  const [newDate, setNewDate] = useState('');
-  const [newClient, setNewClient] = useState('');
-
-  // Metrics
-  const stableCount = collaborateurs.filter((c) => c.statutAlerte === 'stable').length;
-  const urgentCount = collaborateurs.filter((c) => c.statutAlerte === 'urgent').length;
-  const benchCount = collaborateurs.filter((c) => c.statutAlerte === 'intermission').length;
-
-  // Filtered List
-  const filtered = collaborateurs.filter((c) => {
-    const matchMetier = selectedMetier === 'Tous' || c.metier === selectedMetier;
-    const matchStatus = filterStatus === 'all' || c.statutAlerte === filterStatus;
-    const matchSearch =
-      searchQuery === '' ||
-      c.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (c.clientActuel && c.clientActuel.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchMetier && matchStatus && matchSearch;
+  // État unifié du modal collaborateur (création si null, édition si collaborateur sélectionné)
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    collabToEdit: Collaborateur | null;
+  }>({
+    isOpen: false,
+    collabToEdit: null,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newNom || !newEmail || !newDate) return;
-    onAddCollaborateur({
-      nom: newNom,
-      email: newEmail,
-      metier: newMetier,
-      dateFinStaffing: newDate,
-      role: 'collaborateur',
-      clientActuel: newClient || 'Mission en cours',
+  // KPI Metrics data-driven
+  const stableCount = useMemo(
+    () => collaborateurs.filter((c) => c.statutAlerte === 'stable').length,
+    [collaborateurs]
+  );
+  const urgentCount = useMemo(
+    () => collaborateurs.filter((c) => c.statutAlerte === 'urgent').length,
+    [collaborateurs]
+  );
+  const benchCount = useMemo(
+    () => collaborateurs.filter((c) => c.statutAlerte === 'intermission').length,
+    [collaborateurs]
+  );
+
+  // Filtrage mémorisé haute performance
+  const filteredCollaborateurs = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    return collaborateurs.filter((c) => {
+      const matchMetier = selectedMetier === 'Tous' || c.metier === selectedMetier;
+      const matchStatus = filterStatus === 'all' || c.statutAlerte === filterStatus;
+      const matchSearch =
+        !query ||
+        c.nom.toLowerCase().includes(query) ||
+        c.email.toLowerCase().includes(query) ||
+        (c.clientActuel && c.clientActuel.toLowerCase().includes(query));
+      return matchMetier && matchStatus && matchSearch;
     });
-    setNewNom('');
-    setNewEmail('');
-    setNewDate('');
-    setNewClient('');
-    setShowAddModal(false);
+  }, [collaborateurs, selectedMetier, filterStatus, searchQuery]);
+
+  const handleOpenCreateModal = () => {
+    setModalState({ isOpen: true, collabToEdit: null });
+  };
+
+  const handleOpenEditModal = (collab: Collaborateur) => {
+    setModalState({ isOpen: true, collabToEdit: collab });
+  };
+
+  const handleCloseModal = () => {
+    setModalState({ isOpen: false, collabToEdit: null });
+  };
+
+  const handleSaveCollaborateur = async (
+    data: CollaborateurCreatePayload | CollaborateurUpdatePayload
+  ) => {
+    if (modalState.collabToEdit && onUpdateCollaborateur) {
+      await onUpdateCollaborateur(modalState.collabToEdit.id, data as CollaborateurUpdatePayload);
+    } else {
+      onAddCollaborateur(data as CollaborateurCreatePayload);
+    }
   };
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
+      {/* En-tête de la matrice */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -100,9 +119,9 @@ export function RadarTab({
           </p>
         </div>
 
-        {currentUser.role === 'manager' && (
+        {isManager && (
           <Button
-            onClick={() => setShowAddModal(true)}
+            onClick={handleOpenCreateModal}
             icon={<UserPlus className="w-4 h-4" />}
             variant="primary"
           >
@@ -111,104 +130,52 @@ export function RadarTab({
         )}
       </div>
 
-      {/* Summary KPI Cards (Style Stitch Modern) */}
+      {/* Grille des KPI Cards (Molécule réutilisable KpiCard) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {/* Card 1 : Stables */}
-        <div
+        <KpiCard
+          title="Missions Stables"
+          count={stableCount}
+          badgeLabel="> 15 jours"
+          description="Consultants sécurisés sur mission longue"
+          status="stable"
+          isActive={filterStatus === 'stable'}
           onClick={() => setFilterStatus(filterStatus === 'stable' ? 'all' : 'stable')}
-          className={`card-shell p-5 cursor-pointer transition-all ${
-            filterStatus === 'stable' ? 'ring-2 ring-emerald-500 bg-emerald-50/20' : ''
-          }`}
-          title="Cliquer pour filtrer"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Missions Stables</span>
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-200" />
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-900 tracking-tight">{stableCount}</span>
-            <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-              &gt; 15 jours
-            </span>
-          </div>
-          <p className="text-xs text-slate-400 mt-2 font-medium">Consultants sécurisés sur mission longue</p>
-        </div>
-
-        {/* Card 2 : Urgents */}
-        <div
+        />
+        <KpiCard
+          title="Alertes Urgentes"
+          count={urgentCount}
+          badgeLabel="≤ 15 jours"
+          description="Fins de mission imminentes à repositionner"
+          status="urgent"
+          isActive={filterStatus === 'urgent'}
           onClick={() => setFilterStatus(filterStatus === 'urgent' ? 'all' : 'urgent')}
-          className={`card-shell p-5 cursor-pointer transition-all ${
-            filterStatus === 'urgent' ? 'ring-2 ring-amber-500 bg-amber-50/20' : ''
-          }`}
-          title="Cliquer pour filtrer"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Alertes Urgentes</span>
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shadow-sm shadow-amber-200" />
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-amber-600 tracking-tight">{urgentCount}</span>
-            <span className="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
-              &le; 15 jours
-            </span>
-          </div>
-          <p className="text-xs text-slate-400 mt-2 font-medium">Fins de mission imminentes à repositionner</p>
-        </div>
-
-        {/* Card 3 : Intermissions */}
-        <div
+          hasPulse
+        />
+        <KpiCard
+          title="En Intermission"
+          count={benchCount}
+          badgeLabel="Immédiat"
+          description="Disponibles pour initiatives ou projets internes"
+          status="intermission"
+          isActive={filterStatus === 'intermission'}
           onClick={() => setFilterStatus(filterStatus === 'intermission' ? 'all' : 'intermission')}
-          className={`card-shell p-5 cursor-pointer transition-all ${
-            filterStatus === 'intermission' ? 'ring-2 ring-rose-500 bg-rose-50/20' : ''
-          }`}
-          title="Cliquer pour filtrer"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">En Intermission</span>
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-sm shadow-rose-200" />
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-rose-600 tracking-tight">{benchCount}</span>
-            <span className="text-xs font-semibold text-rose-800 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200">
-              Immédiat
-            </span>
-          </div>
-          <p className="text-xs text-slate-400 mt-2 font-medium">Disponibles pour initiatives ou projets internes</p>
-        </div>
+        />
       </div>
 
-      {/* Filter & Search Toolbar */}
+      {/* Barre d'outils et de filtrage (Molécules SearchBar & FilterPills) */}
       <div className="card-shell p-3 sm:p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-        {/* Recherche textuelle */}
-        <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Rechercher par nom, email ou client..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3.5 py-2 text-xs sm:text-sm bg-slate-50/80 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition-all outline-none"
-          />
-        </div>
+        <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
-        {/* Filtres par Métier */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-          {(['Tous', 'Dev', 'QA', 'PO', 'DevOps'] as Metier[]).map((m) => (
-            <button
-              key={m}
-              onClick={() => setSelectedMetier(m)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
-                selectedMetier === m
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
-              }`}
-            >
-              {m}
-            </button>
-          ))}
+          <FilterPills<Metier>
+            options={METIERS_FILTER}
+            selected={selectedMetier}
+            onSelect={setSelectedMetier}
+          />
 
           {filterStatus !== 'all' && (
             <button
+              type="button"
               onClick={() => setFilterStatus('all')}
               className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 px-2 py-1 underline cursor-pointer whitespace-nowrap"
             >
@@ -218,215 +185,20 @@ export function RadarTab({
         </div>
       </div>
 
-      {/* Collaborators Table (Style Stitch) */}
-      <div className="card-shell p-0 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200/80">
-              <tr>
-                <th className="px-6 py-3.5">Collaborateur</th>
-                <th className="px-6 py-3.5">Métier</th>
-                <th className="px-6 py-3.5">Mission Client Actuelle</th>
-                <th className="px-6 py-3.5">Date de Fin</th>
-                <th className="px-6 py-3.5">Statut d&apos;Anticipation</th>
-                <th className="px-6 py-3.5 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-slate-400 text-xs">
-                    Aucun collaborateur ne correspond à ces critères de recherche.
-                  </td>
-                </tr>
-              ) : (
-                filtered.map((collab) => {
-                  let badgeLabel = `${collab.joursRestants}j restants`;
-                  if (collab.joursRestants === 0) badgeLabel = "Fin aujourd'hui !";
-                  if (collab.joursRestants < 0) badgeLabel = `Intermission (J+${Math.abs(collab.joursRestants)})`;
+      {/* Tableau principal (Organisme CollaborateursTable) */}
+      <CollaborateursTable
+        collaborateurs={filteredCollaborateurs}
+        currentUser={currentUser}
+        onSelectCollaborateur={onSelectCollaborateur}
+        onEditCollaborateur={handleOpenEditModal}
+      />
 
-                  const initials = collab.nom
-                    .split(' ')
-                    .map((n) => n[0])
-                    .join('')
-                    .slice(0, 2);
-
-                  return (
-                    <tr key={collab.id} className="hover:bg-slate-50/60 transition-colors group">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-xs shadow-2xs">
-                            {initials}
-                          </div>
-                          <div>
-                            <p className="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
-                              {collab.nom}
-                            </p>
-                            <p className="text-[11px] text-slate-400 font-medium">{collab.email}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <Badge variant="metier" metier={collab.metier}>
-                          {collab.metier}
-                        </Badge>
-                      </td>
-                      <td className="px-6 py-4 text-slate-600">
-                        <div className="flex items-center gap-1.5">
-                          <Briefcase className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span className="font-medium text-xs truncate max-w-xs">
-                            {collab.clientActuel || 'Mission client'}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-slate-600">
-                        <div className="flex items-center gap-1.5 text-xs font-medium">
-                          <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                          <span>{collab.dateFinStaffing}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <Badge variant="alerte" alerte={collab.statutAlerte}>
-                          {badgeLabel}
-                        </Badge>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          {currentUser.role === 'manager' && onUpdateCollaborateur && (
-                            <button
-                              onClick={() => setEditingCollab(collab)}
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all cursor-pointer"
-                              title="Modifier le profil & la mission"
-                            >
-                              <Pencil className="w-3.5 h-3.5" />
-                              <span className="hidden sm:inline">Modifier</span>
-                            </button>
-                          )}
-                          <button
-                            onClick={() => onSelectCollaborateur(collab)}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 border border-transparent hover:border-indigo-200 transition-all cursor-pointer"
-                          >
-                            <span>Voir initiatives</span>
-                            <ArrowUpRight className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Modal: Add Collaborator */}
-      {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-150">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
-                <UserPlus className="w-4 h-4" />
-              </div>
-              <h2 className="text-lg font-bold text-slate-900">Ajouter un Collaborateur</h2>
-            </div>
-            <p className="text-xs text-slate-500 mb-4">
-              Enregistrez un consultant avec sa date de fin de staffing pour le radar d&apos;anticipation.
-            </p>
-
-            <form onSubmit={handleSubmit} className="space-y-3.5">
-              <div>
-                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Nom complet
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="ex: Alex Dupont"
-                  value={newNom}
-                  onChange={(e) => setNewNom(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="alex.dupont@societe.com"
-                  value={newEmail}
-                  onChange={(e) => setNewEmail(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Métier
-                  </label>
-                  <select
-                    value={newMetier}
-                    onChange={(e) => setNewMetier(e.target.value as Metier)}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 outline-none"
-                  >
-                    <option value="Dev">Dev</option>
-                    <option value="QA">QA</option>
-                    <option value="PO">PO</option>
-                    <option value="DevOps">DevOps</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Fin de Staffing
-                  </label>
-                  <input
-                    type="date"
-                    required
-                    value={newDate}
-                    onChange={(e) => setNewDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 outline-none"
-                  >
-                  </input>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Client ou Projet actuel
-                </label>
-                <input
-                  type="text"
-                  placeholder="ex: BNP Paribas (API Cloud)"
-                  value={newClient}
-                  onChange={(e) => setNewClient(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 outline-none"
-                />
-              </div>
-
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
-                <Button type="button" variant="outline" onClick={() => setShowAddModal(false)}>
-                  Annuler
-                </Button>
-                <Button type="submit" variant="primary">
-                  Enregistrer
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Modal: Edit Collaborator */}
-      <EditCollaborateurModal
-        isOpen={!!editingCollab}
-        onClose={() => setEditingCollab(null)}
-        collaborateur={editingCollab}
-        onSave={onUpdateCollaborateur || (async () => {})}
+      {/* Modal unifié Collaborateur (Organisme CollaborateurModal) */}
+      <CollaborateurModal
+        isOpen={modalState.isOpen}
+        onClose={handleCloseModal}
+        initialData={modalState.collabToEdit}
+        onSave={handleSaveCollaborateur}
       />
     </div>
   );

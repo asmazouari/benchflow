@@ -10,11 +10,8 @@ import {
 } from '../types';
 import { INITIAL_COLLABORATEURS, INITIAL_INITIATIVES } from '../lib/mockData';
 import { api, authStorage, LoginResponse } from '../lib/api';
-import { Navbar } from '../components/Navbar';
-import { LoginView } from '../components/LoginView';
-import { RadarTab } from '../components/templates/RadarTab';
-import { CatalogTab } from '../components/templates/CatalogTab';
-import { ValidationTab } from '../components/templates/ValidationTab';
+import { Navbar, LoginView } from '../components/organisms';
+import { RadarTab, CatalogTab, ValidationTab } from '../components/templates';
 import { Loader2, Sparkles } from 'lucide-react';
 
 export default function Home() {
