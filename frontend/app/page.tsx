@@ -1,351 +1,63 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-  Collaborateur,
-  Initiative,
-  UserProfile,
-  CollaborateurUpdatePayload,
-  InitiativeUpdatePayload,
-} from '../types';
-import { INITIAL_COLLABORATEURS, INITIAL_INITIATIVES } from '../lib/mockData';
-import { api, authStorage, LoginResponse } from '../lib/api';
+import React, { useState, useEffect } from 'react';
 import { Navbar, LoginView } from '../components/organisms';
 import { RadarTab, CatalogTab, ValidationTab } from '../components/templates';
+import { useAuthSession, useBenchFlowData } from '../hooks';
 import { Loader2, Sparkles } from 'lucide-react';
 
+/**
+ * Page principale BenchFlow (Niveau 5 - Page Atomic Design).
+ * Rôle : Chef d'orchestre visuel. Injecte les données et callbacks
+ * dans les templates correspondants (Radar, Catalogue, Validation)
+ * en déléguant la gestion d'état et le réseau aux custom hooks.
+ */
 export default function Home() {
-  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [authChecking, setAuthChecking] = useState<boolean>(true);
-
   const [activeTab, setActiveTab] = useState<'radar' | 'catalog' | 'validation'>('radar');
-  const [collaborateurs, setCollaborateurs] = useState<Collaborateur[]>(INITIAL_COLLABORATEURS);
-  const [initiatives, setInitiatives] = useState<Initiative[]>(INITIAL_INITIATIVES);
-  const [isBackendLive, setIsBackendLive] = useState<boolean>(false);
 
-  // Charge les données fraîches depuis le backend FastAPI
-  const loadDashboardData = useCallback(async () => {
-    try {
-      const [summary, inits] = await Promise.all([
-        api.getRadarSummary(),
-        api.getInitiatives(),
-      ]);
-      setCollaborateurs(summary.collaborateurs);
-      setInitiatives(inits);
-      setIsBackendLive(true);
-    } catch (err) {
-      console.warn('Backend FastAPI non connecté ou erreur de chargement, données de secours :', err);
-      setIsBackendLive(false);
-    }
-  }, []);
+  const {
+    currentUser,
+    isAuthenticated,
+    authChecking,
+    handleLoginSuccess,
+    handleLogout: rawHandleLogout,
+  } = useAuthSession();
 
-  // Vérification de la session Keycloak au montage du composant
-  useEffect(() => {
-    async function checkSession() {
-      const token = authStorage.getToken();
-      if (!token) {
-        setAuthChecking(false);
-        return;
-      }
-
-      try {
-        const profile = await api.getMe();
-        setCurrentUser(profile);
-        setIsAuthenticated(true);
-        await loadDashboardData();
-      } catch (err) {
-        console.warn('Session Keycloak expirée ou token invalide :', err);
-        api.logout();
-        setCurrentUser(null);
-        setIsAuthenticated(false);
-      } finally {
-        setAuthChecking(false);
-      }
-    }
-
-    checkSession();
-  }, [loadDashboardData]);
-
-  // Connexion réussie via le formulaire Keycloak
-  const handleLoginSuccess = async (session: LoginResponse) => {
-    setCurrentUser(session.user);
-    setIsAuthenticated(true);
-    await loadDashboardData();
-  };
-
-  // Déconnexion propre
   const handleLogout = () => {
-    api.logout();
-    setCurrentUser(null);
-    setIsAuthenticated(false);
+    rawHandleLogout();
     setActiveTab('radar');
   };
 
-  // 1. Action : Ajouter un collaborateur (Manager)
-  const handleAddCollaborateur = async (
-    newCollabData: Omit<Collaborateur, 'id' | 'joursRestants' | 'statutAlerte'>
-  ) => {
-    if (isBackendLive) {
-      try {
-        await api.createCollaborateur(newCollabData);
-        // Rafraîchit les compteurs du Radar
-        const summary = await api.getRadarSummary();
-        setCollaborateurs(summary.collaborateurs);
-        return;
-      } catch (e: unknown) {
-        const message = e instanceof Error ? e.message : 'Échec de connexion';
-        console.error('Erreur API createCollaborateur :', e);
-        alert(`Erreur d'enregistrement sur le serveur : ${message}`);
-        return;
-      }
+  const {
+    collaborateurs,
+    initiatives,
+    isBackendLive,
+    counts,
+    loadDashboardData,
+    handleAddCollaborateur,
+    handleUpdateCollaborateur,
+    handleTakeInitiative,
+    handleAddInitiative,
+    handleProposeIdea,
+    handleUpdateInitiative,
+    handleValidateIdea,
+    handleRejectIdea,
+    handleCompleteInitiative,
+  } = useBenchFlowData({
+    currentUser,
+    onNavigateTab: setActiveTab,
+  });
+
+  // Dès que l'utilisateur est authentifié, on charge les données fraîches depuis le backend
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadDashboardData();
     }
-
-    // Fallback local optimiste
-    const diffDays = Math.ceil(
-      (new Date(newCollabData.dateFinStaffing).getTime() - new Date().getTime()) / (1000 * 3600 * 24)
-    );
-    let statutAlerte: Collaborateur['statutAlerte'] = 'stable';
-    if (diffDays <= 0) statutAlerte = 'intermission';
-    else if (diffDays <= 15) statutAlerte = 'urgent';
-
-    const newCollab: Collaborateur = {
-      ...newCollabData,
-      id: Date.now(),
-      joursRestants: diffDays,
-      statutAlerte,
-    };
-    setCollaborateurs((prev) => [newCollab, ...prev]);
-  };
-
-  // 2. Action : Mettre à jour un collaborateur existant (Manager)
-  const handleUpdateCollaborateur = async (
-    id: number,
-    data: CollaborateurUpdatePayload
-  ) => {
-    if (isBackendLive) {
-      try {
-        await api.updateCollaborateur(id, data);
-        const summary = await api.getRadarSummary();
-        setCollaborateurs(summary.collaborateurs);
-        return;
-      } catch (e: unknown) {
-        console.error('Erreur API updateCollaborateur :', e);
-        throw e;
-      }
-    }
-
-    // Fallback local optimiste
-    setCollaborateurs((prev) =>
-      prev.map((collab) => {
-        if (collab.id !== id) return collab;
-        const newDate = data.dateFinStaffing || collab.dateFinStaffing;
-        const diffDays = Math.ceil(
-          (new Date(newDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24)
-        );
-        let statutAlerte: Collaborateur['statutAlerte'] = 'stable';
-        if (diffDays <= 0) statutAlerte = 'intermission';
-        else if (diffDays <= 15) statutAlerte = 'urgent';
-
-        return {
-          ...collab,
-          ...data,
-          joursRestants: diffDays,
-          statutAlerte,
-        };
-      })
-    );
-  };
-
-  // 3. Action : Prendre une initiative disponible (1 clic)
-  const handleTakeInitiative = async (id: number) => {
-    const userNom = currentUser?.nom || 'Collaborateur';
-    if (isBackendLive) {
-      try {
-        const updated = await api.takeInitiative(id, userNom);
-        setInitiatives((prev) => prev.map((init) => (init.id === id ? updated : init)));
-        const summary = await api.getRadarSummary();
-        setCollaborateurs(summary.collaborateurs);
-        setActiveTab('validation');
-        return;
-      } catch (e) {
-        console.error('Erreur API takeInitiative :', e);
-      }
-    }
-
-    // Fallback local
-    setInitiatives((prev) =>
-      prev.map((init) =>
-        init.id === id
-          ? {
-              ...init,
-              statut: 'EN_COURS',
-              assigneNom: userNom,
-            }
-          : init
-      )
-    );
-    setActiveTab('validation');
-  };
-
-  // 4. Action : Déposer une initiative pré-validée (Manager)
-  const handleAddInitiative = async (
-    newInitData: Omit<Initiative, 'id' | 'dateCreation' | 'statut' | 'origine'>
-  ) => {
-    if (isBackendLive) {
-      try {
-        const created = await api.createInitiative(newInitData, true);
-        setInitiatives((prev) => [created, ...prev]);
-        return;
-      } catch (e) {
-        console.error('Erreur API addInitiative :', e);
-      }
-    }
-
-    // Fallback local
-    const newInit: Initiative = {
-      ...newInitData,
-      id: Date.now(),
-      dateCreation: new Date().toISOString().split('T')[0],
-      statut: 'DISPONIBLE',
-      origine: 'manager',
-    };
-    setInitiatives((prev) => [newInit, ...prev]);
-  };
-
-  // 5. Action : Proposer une initiative personnelle avec document cadrage (Collaborateur)
-  const handleProposeIdea = async (
-    newIdeaData: Omit<Initiative, 'id' | 'dateCreation' | 'statut' | 'origine'>,
-    file?: File | null
-  ) => {
-    if (isBackendLive) {
-      try {
-        let created = await api.createInitiative(newIdeaData, false);
-        if (file) {
-          try {
-            created = await api.uploadInitiativeDocument(created.id, file);
-          } catch (uploadErr) {
-            console.error('Erreur upload document cadrage MinIO :', uploadErr);
-          }
-        }
-        setActiveTab('validation');
-        setInitiatives((prev) => [created, ...prev]);
-        return;
-      } catch (e) {
-        console.error('Erreur API proposeIdea :', e);
-      }
-    }
-
-    // Fallback local
-    setActiveTab('validation');
-    const newIdea: Initiative = {
-      ...newIdeaData,
-      id: Date.now(),
-      dateCreation: new Date().toISOString().split('T')[0],
-      statut: 'A_VALIDER',
-      origine: 'collaborateur',
-      documentNom: file?.name,
-      documentTaille: file?.size,
-    };
-    setInitiatives((prev) => [newIdea, ...prev]);
-  };
-
-  // 6. Action : Mettre à jour une initiative existante (Manager ou Auteur)
-  const handleUpdateInitiative = async (
-    id: number,
-    data: InitiativeUpdatePayload
-  ) => {
-    if (isBackendLive) {
-      try {
-        const updated = await api.updateInitiative(id, data);
-        setInitiatives((prev) =>
-          prev.map((init) => (init.id === id ? updated : init))
-        );
-        return;
-      } catch (e: unknown) {
-        console.error('Erreur API updateInitiative :', e);
-        throw e;
-      }
-    }
-
-    // Fallback local
-    setInitiatives((prev) =>
-      prev.map((init) => (init.id === id ? { ...init, ...data } : init))
-    );
-  };
-
-  // 7. Action : Valider une initiative (Manager)
-  const handleValidateIdea = async (id: number) => {
-    if (isBackendLive) {
-      try {
-        const updated = await api.validateInitiative(id);
-        setInitiatives((prev) => prev.map((init) => (init.id === id ? updated : init)));
-        return;
-      } catch (e) {
-        console.error('Erreur API validateIdea :', e);
-      }
-    }
-
-    // Fallback local
-    setInitiatives((prev) =>
-      prev.map((init) => (init.id === id ? { ...init, statut: 'EN_COURS' } : init))
-    );
-  };
-
-  // 8. Action : Refuser une initiative (Manager)
-  const handleRejectIdea = async (id: number) => {
-    if (isBackendLive) {
-      try {
-        const updated = await api.rejectInitiative(id);
-        setInitiatives((prev) => prev.map((init) => (init.id === id ? updated : init)));
-        return;
-      } catch (e) {
-        console.error('Erreur API rejectIdea :', e);
-      }
-    }
-
-    // Fallback local
-    setInitiatives((prev) =>
-      prev.map((init) => (init.id === id ? { ...init, statut: 'REFUSE' } : init))
-    );
-  };
-
-  // 9. Action : Clôturer avec livrable
-  const handleCompleteInitiative = async (id: number, livrableUrl: string) => {
-    if (isBackendLive) {
-      try {
-        const updated = await api.completeInitiative(id, livrableUrl);
-        setInitiatives((prev) =>
-          prev.map((init) => (init.id === id ? updated : init))
-        );
-        const summary = await api.getRadarSummary();
-        setCollaborateurs(summary.collaborateurs);
-        return;
-      } catch (e) {
-        console.error('Erreur API completeInitiative :', e);
-      }
-    }
-
-    // Fallback local
-    setInitiatives((prev) =>
-      prev.map((init) =>
-        init.id === id ? { ...init, statut: 'TERMINE', livrableUrl } : init
-      )
-    );
-  };
+  }, [isAuthenticated, loadDashboardData]);
 
   // Redirection automatique quand on clique sur "Voir initiatives" depuis le Radar
   const handleSelectCollaborateur = () => {
     setActiveTab('catalog');
-  };
-
-  // Indicateurs dynamiques pour les badges d'onglets
-  const counts = {
-    alerts: collaborateurs.filter(
-      (c) => c.statutAlerte === 'urgent' || c.statutAlerte === 'intermission'
-    ).length,
-    availableInitiatives: initiatives.filter((i) => i.statut === 'DISPONIBLE').length,
-    pendingValidation: initiatives.filter((i) => i.statut === 'A_VALIDER').length,
   };
 
   // 1. Écran de chargement pendant la vérification du token Keycloak
@@ -368,7 +80,14 @@ export default function Home() {
 
   // 2. Si l'utilisateur n'est pas authentifié, afficher l'écran de Login B2B Keycloak
   if (!isAuthenticated || !currentUser) {
-    return <LoginView onLoginSuccess={handleLoginSuccess} />;
+    return (
+      <LoginView
+        onLoginSuccess={async (session) => {
+          handleLoginSuccess(session);
+          await loadDashboardData();
+        }}
+      />
+    );
   }
 
   // 3. Utilisateur authentifié : Dashboard complet avec RBAC et Double-Barre
